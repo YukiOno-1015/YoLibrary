@@ -6,7 +6,7 @@
 //
 
 import Foundation
-extension TimeZone {
+public extension TimeZone {
     
     public static let japan = TimeZone(identifier: "Asia/Tokyo")!
 }

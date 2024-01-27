@@ -6,7 +6,7 @@
 //
 
 import Foundation
-extension DateFormatter {
+public extension DateFormatter {
     public static var yyyyMMddHHmmss: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"

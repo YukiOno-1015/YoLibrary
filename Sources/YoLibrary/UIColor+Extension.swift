@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-extension UIColor {
+public extension UIColor {
     public convenience init(rgb: Int) {
           let r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
           let g = CGFloat((rgb & 0x00FF00) >>  8) / 255.0
@@ -25,7 +25,7 @@ extension UIColor {
       }
 }
 
-extension UIColor {
+public extension UIColor {
     
     public static var backgroundColor: UIColor {
       return UIColor(rgb: 0x9acd32)

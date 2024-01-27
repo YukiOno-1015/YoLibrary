@@ -128,4 +128,47 @@ public extension UIDevice {
     public static var isPad: Bool {
         return UIDevice.current.userInterfaceIdiom == .pad
     }
+    
+    // MARK: - 幅・高さの取得
+    
+    /// 画面の横幅から比率算出してサイズ取得する
+    /// - Parameter num: 端末画面横幅に対する比率
+    public class func calcWidth(_ num: CGFloat) -> CGFloat {
+        return Const.WIDTH * num
+    }
+    
+    /// 画面の縦幅から比率算出してサイズ取得する
+    /// - Parameter num: 端末画面縦幅に対する比率
+    public class func calcHeight(_ num: CGFloat) -> CGFloat {
+        return Const.HEIGHT * num
+    }
+    
+    /// ステータスバーの高さ取得
+    public class func getStatusHei() -> CGFloat {
+        return UIApplication.shared.statusBarFrame.size.height
+    }
+    
+    /// ナビゲーションバーの高さ取得
+    /// - Parameter vc: vc description
+    public class func getNavHei(vc: UIViewController) -> CGFloat {
+        return vc.navigationController?.navigationBar.frame.size.height ?? 0
+    }
+    
+    /// ステータスバーとナビゲーションバーの高さの合計取得
+    /// - Parameter vc: vc description
+    public class func getHeadHei(vc: UIViewController) -> CGFloat {
+        return UIDevice.getStatusHei() + UIDevice.getNavHei(vc: vc)
+    }
+    
+    /// タブバーの高さ取得
+    /// - Parameter vc: vc description
+    public class func getTabBarHei(vc: UIViewController) -> CGFloat {
+        return vc.tabBarController?.tabBar.frame.size.height ?? 0
+    }
+    
+    /// ステータスバーとナビゲーションバーとタブバーの高さの合計取得
+    /// - Parameter vc: vc description
+    public class func getHeadTabHei(vc: UIViewController) -> CGFloat {
+        return UIDevice.getHeadHei(vc: vc) + UIDevice.getTabBarHei(vc: vc)
+    }
 }

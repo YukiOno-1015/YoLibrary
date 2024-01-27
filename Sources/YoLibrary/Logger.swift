@@ -8,13 +8,13 @@ import Foundation
 import os
 import OSLog
 
-extension OSLog {
+public extension OSLog {
     public static let ui = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "UI")
     public static let api = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "API")
     public static let other = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "OTHER")
 }
  
-extension OSLogType: CustomStringConvertible {
+public extension OSLogType: CustomStringConvertible {
     public var description: String {
         switch self {
         case .info:
