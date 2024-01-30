@@ -123,6 +123,8 @@ public struct Logger {
             line,
             message
         )
+        
+        dump(message)
 #endif
     }
 }
