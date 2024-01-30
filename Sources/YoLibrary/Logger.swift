@@ -114,7 +114,7 @@ public struct Logger {
     ) {
         #if DEBUG
             os_log(
-                "[%@] %@ %@ L:%d %@",
+                "[%@] %@ %@ L:%d ★★★★★★★ %@ ★★★★★★★",
                 log: osLog,
                 type: logType,
                 String(describing: logType),

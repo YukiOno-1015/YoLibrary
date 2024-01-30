@@ -11,7 +11,7 @@ public class Utils {
         dump(userInfo)
     }
     
-    public func Localization(keyCode: String) -> String {
+    public func lStr(keyCode: String) -> String {
         return NSLocalizedString(keyCode, comment: "")
     }
     
