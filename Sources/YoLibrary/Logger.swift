@@ -8,33 +8,33 @@ import Foundation
 import os
 import OSLog
 
-public extension OSLog {
+extension OSLog {
     public static let ui = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "UI")
     public static let api = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "API")
     public static let other = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "OTHER")
 }
- 
-public extension OSLogType: CustomStringConvertible {
+
+extension OSLogType: CustomStringConvertible {
     public var description: String {
         switch self {
         case .info:
             return "INFO"
- 
+            
         case .debug:
             return "DEBUG"
- 
+            
         case .error:
             return "ERROR"
- 
+            
         case .fault:
             return "FAULT"
- 
+            
         default:
             return "DEFAULT"
         }
     }
 }
- 
+
 public struct Logger {
     public static func info(
         osLog: OSLog = .default,
@@ -52,7 +52,7 @@ public struct Logger {
             line: line
         )
     }
- 
+    
     public static func debug(
         osLog: OSLog = .default,
         message: String,
@@ -69,7 +69,7 @@ public struct Logger {
             line: line
         )
     }
- 
+    
     public static func error(
         osLog: OSLog = .default,
         message: String,
@@ -86,7 +86,7 @@ public struct Logger {
             line: line
         )
     }
- 
+    
     public static func fault(
         osLog: OSLog = .default,
         message: String,
@@ -103,7 +103,7 @@ public struct Logger {
             line: line
         )
     }
- 
+    
     private static func doLog(
         message: String,
         osLog: OSLog,
@@ -112,17 +112,17 @@ public struct Logger {
         function: String,
         line: Int
     ) {
-        #if DEBUG
-            os_log(
-                "[%@] %@ %@ L:%d ★★★★★★★ %@ ★★★★★★★",
-                log: osLog,
-                type: logType,
-                String(describing: logType),
-                file.split(separator: "/").last! as CVarArg,
-                function,
-                line,
-                message
-            )
-        #endif
+#if DEBUG
+        os_log(
+            "[%@] %@ %@ L:%d ★★★★★★★ %@ ★★★★★★★",
+            log: osLog,
+            type: logType,
+            String(describing: logType),
+            file.split(separator: "/").last! as CVarArg,
+            function,
+            line,
+            message
+        )
+#endif
     }
 }
