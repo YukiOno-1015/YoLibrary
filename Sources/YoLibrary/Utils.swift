@@ -153,7 +153,7 @@ public class Utils {
             print("⚠️ `UIApplication.shared.canOpenURL(url)` が `false` です。`LSApplicationQueriesSchemes` の設定を確認してください。")
             return
         }
-        
+
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 

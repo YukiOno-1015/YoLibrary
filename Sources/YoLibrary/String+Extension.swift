@@ -1,4 +1,5 @@
 import CommonCrypto
+import CryptoKit
 import Foundation
 
 public extension String {
@@ -51,18 +52,25 @@ public extension String {
         caseSensitive ? hasSuffix(suffix) : lowercased().hasSuffix(suffix.lowercased())
     }
 
+    // **部分一致チェック（大文字・小文字を区別可能）**
     func contains(_ substring: String, caseSensitive: Bool = true) -> Bool {
-        caseSensitive ? contains(substring) : lowercased().contains(substring.lowercased())
+        if caseSensitive {
+            return range(of: substring) != nil
+        } else {
+            return range(of: substring, options: .caseInsensitive) != nil
+        }
     }
 
     // MARK: - 文字列変換
 
-    var toHalfWidth: String {
-        applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? self
+    /// **半角英数字 → 全角変換**
+    var toFullWidth: String {
+        applyingTransform(.fullwidthToHalfwidth, reverse: true) ?? self
     }
 
-    var toFullWidth: String {
-        applyingTransform(.halfwidthToFullwidth, reverse: false) ?? self
+    /// **全角英数字 → 半角変換**
+    var toHalfWidth: String {
+        applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? self
     }
 
     var base64Encoded: String? {
@@ -94,12 +102,8 @@ public extension String {
     }
 
     var md5: String {
-        guard let data = data(using: .utf8) else { return "" }
-        var hash = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-        data.withUnsafeBytes { bytes in
-            _ = CC_MD5(bytes.baseAddress, CC_LONG(data.count), &hash)
-        }
-        return hash.map { String(format: "%02x", $0) }.joined()
+        let digest = Insecure.MD5.hash(data: Data(utf8))
+        return digest.map { String(format: "%02x", $0) }.joined()
     }
 
     // MARK: - JSON 変換
