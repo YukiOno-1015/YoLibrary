@@ -1,35 +1,37 @@
 import UIKit
 
+/// **汎用ユーティリティクラス**
 public class Utils {
-    // MARK: - APNs デバッグ
+    // MARK: - 🚀 APNs デバッグ
 
-    /// **APNs ペイロードを出力する（デバッグ用）**
+    /// **APNs ペイロードを出力（デバッグ用）**
+    ///
+    /// - Parameter userInfo: APNs の受信情報（`[String: Any?]`）
     public static func postApnsPayload(_ userInfo: [String: Any?]) {
         let nonNilUserInfo = userInfo.compactMapValues { $0 }
         dump(nonNilUserInfo)
     }
 
-    // MARK: - ローカライズ
+    // MARK: - 🌎 ローカライズ
 
     /// **ローカライズされた文字列を取得**
+    ///
+    /// - Parameter key: `Localizable.strings` に定義したキー
+    /// - Returns: ローカライズされた文字列
     public static func lstr(_ key: String) -> String {
         NSLocalizedString(key, comment: "")
     }
 
-    // MARK: - ナビゲーション & UI 操作
+    // MARK: - 🎨 UI & ナビゲーション設定
 
-    /// **UIViewController のタイトルを設定**
+    /// **`UIViewController` のタイトルを設定**
     public static func setTitle(_ vc: UIViewController, title: String) {
         vc.title = title
     }
 
     /// **ナビゲーションバーのタイトルを設定**
     public static func setNavigationBar(_ vc: UIViewController, title: String) {
-        if let navController = vc.navigationController {
-            navController.navigationBar.topItem?.title = title
-        } else {
-            vc.title = title
-        }
+        vc.navigationController?.navigationBar.topItem?.title = title
     }
 
     /// **背景色を設定**
@@ -57,12 +59,12 @@ public class Utils {
         vc.navigationItem.leftBarButtonItem = backButton
     }
 
-    /// **UINavigationController にラップ**
+    /// **`UINavigationController` にラップ**
     public static func embedInNavigationController(_ vc: UIViewController) -> UINavigationController {
         UINavigationController(rootViewController: vc)
     }
 
-    // MARK: - ローディング表示
+    // MARK: - ⏳ ローディング表示
 
     private static var loadingIndicator: UIActivityIndicatorView?
 
@@ -89,7 +91,7 @@ public class Utils {
         }
     }
 
-    // MARK: - アラート & トースト表示
+    // MARK: - ⚠️ アラート & トースト表示
 
     /// **アラートを表示**
     public static func showAlert(
@@ -116,31 +118,7 @@ public class Utils {
         showAlert(on: vc, title: "エラー", message: message, okTitle: "閉じる", okAction: handler)
     }
 
-    /// **トーストメッセージを表示**
-    public static func showToast(on vc: UIViewController, message: String, duration: TimeInterval = 2.0) {
-        let toastLabel = UILabel(frame: CGRect(x: 0, y: 0, width: vc.view.frame.width - 40, height: 50))
-        toastLabel.center = CGPoint(x: vc.view.center.x, y: vc.view.frame.height - 100)
-        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        toastLabel.textColor = UIColor.white
-        toastLabel.textAlignment = .center
-        toastLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        toastLabel.text = message
-        toastLabel.alpha = 0.0
-        toastLabel.layer.cornerRadius = 10
-        toastLabel.clipsToBounds = true
-
-        vc.view.addSubview(toastLabel)
-
-        UIView.animate(withDuration: 0.5, animations: {
-            toastLabel.alpha = 1.0
-        }) { _ in
-            UIView.animate(withDuration: 0.5, delay: duration, options: .curveEaseOut, animations: {
-                toastLabel.alpha = 0.0
-            }) { _ in
-                toastLabel.removeFromSuperview()
-            }
-        }
-    }
+    // MARK: - 🔗 URL 操作
 
     /// **URL を開く**
     public static func openURL(_ urlString: String) {
@@ -157,42 +135,49 @@ public class Utils {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
-    // MARK: - RootViewController 切り替え
+    // MARK: - 📱 RootViewController 切り替え（iOS 15 未満 & 以上対応）
 
     /// **RootViewController を変更（アニメーションあり）**
     public static func setRootViewController(_ viewController: UIViewController, animated: Bool = true) {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first
-        else {
-            print("⚠️ RootViewControllerの変更に失敗: UIWindowが見つかりません")
-            return
-        }
+        if #available(iOS 15.0, *) {
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = windowScene.windows.first
+            else {
+                print("⚠️ RootViewControllerの変更に失敗: UIWindowが見つかりません")
+                return
+            }
 
-        if animated {
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+            if animated {
+                UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    window.rootViewController = viewController
+                }, completion: nil)
+            } else {
                 window.rootViewController = viewController
-            }, completion: nil)
+            }
+            window.makeKeyAndVisible()
         } else {
-            window.rootViewController = viewController
+            if let window = UIApplication.shared.windows.first {
+                window.rootViewController = viewController
+                window.makeKeyAndVisible()
+            }
         }
-        window.makeKeyAndVisible()
     }
 
-    // MARK: - ダークモード判定
+    // MARK: - 🌙 ダークモード判定
 
     /// **現在のテーマがダークモードか判定**
     public static func isDarkMode(_ vc: UIViewController) -> Bool {
         vc.traitCollection.userInterfaceStyle == .dark
     }
 
-    // MARK: - キーボード操作
+    // MARK: - 🎹 キーボード操作
 
     /// **キーボードを閉じる**
     public static func dismissKeyboard() {
         UIApplication.shared.sendAction(#selector(UIApplication.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 
-    // MARK: - スクリーンショット撮影
+    // MARK: - 📸 スクリーンショット撮影
 
     /// **スクリーンショットを取得**
     public static func captureScreenshot(of view: UIView) -> UIImage? {
@@ -203,7 +188,7 @@ public class Utils {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 
-    // MARK: - Haptic フィードバック
+    // MARK: - 🔔 Haptic フィードバック
 
     /// **Haptic フィードバックを実行**
     public static func triggerHapticFeedback(style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
