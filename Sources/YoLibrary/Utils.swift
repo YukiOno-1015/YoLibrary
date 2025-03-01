@@ -118,6 +118,36 @@ public class Utils {
         showAlert(on: vc, title: "エラー", message: message, okTitle: "閉じる", okAction: handler)
     }
 
+    /// **トーストメッセージを表示**
+    ///
+    /// - Parameters:
+    ///   - vc: `UIViewController`（表示する画面）
+    ///   - message: 表示するメッセージ
+    ///   - duration: 表示時間（デフォルト: `2.0`秒）
+    public static func showToast(on vc: UIViewController, message: String, duration: TimeInterval = 2.0) {
+        let toastLabel = UILabel(frame: CGRect(x: 20, y: vc.view.frame.height - 120, width: vc.view.frame.width - 40, height: 50))
+        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        toastLabel.textColor = .white
+        toastLabel.textAlignment = .center
+        toastLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        toastLabel.text = message
+        toastLabel.alpha = 0.0
+        toastLabel.layer.cornerRadius = 10
+        toastLabel.clipsToBounds = true
+
+        vc.view.addSubview(toastLabel)
+
+        UIView.animate(withDuration: 0.5, animations: {
+            toastLabel.alpha = 1.0
+        }) { _ in
+            UIView.animate(withDuration: 0.5, delay: duration, options: .curveEaseOut, animations: {
+                toastLabel.alpha = 0.0
+            }) { _ in
+                toastLabel.removeFromSuperview()
+            }
+        }
+    }
+
     // MARK: - 🔗 URL 操作
 
     /// **URL を開く**
