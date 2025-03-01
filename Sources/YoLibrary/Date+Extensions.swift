@@ -1,315 +1,151 @@
-//
-//  Date+Extension.swift
-//  YoItems
-//
-//  Created by Yuki Ono on 2023/04/09.
-//
-
 import Foundation
-extension Date {
-    
-    public var calendar: Calendar {
+
+// MARK: - Date 拡張
+
+public extension Date {
+    /// **共通のカレンダー設定（グレゴリオ暦・日本時間）**
+    private static var sharedCalendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = .japan
-        calendar.locale   = .japan
+        calendar.locale = .japan
         return calendar
     }
-}
 
-extension Date {
-    public init(year: Int? = nil, month: Int? = nil, day: Int? = nil, hour: Int? = nil, minute: Int? = nil, second: Int? = nil) {
-        self.init(
-            timeIntervalSince1970: Date().fixed(
-                year:   year,
-                month:  month,
-                day:    day,
-                hour:   hour,
-                minute: minute,
-                second: second
-            ).timeIntervalSince1970
-        )
+    /// **指定した年月日時分秒で Date を作成**
+    init(year: Int? = nil, month: Int? = nil, day: Int? = nil,
+         hour: Int? = nil, minute: Int? = nil, second: Int? = nil)
+    {
+        self = Date().fixed(year: year, month: month, day: day,
+                            hour: hour, minute: minute, second: second)
     }
-}
-extension Date {
-    public func fixed(year: Int? = nil, month: Int? = nil, day: Int? = nil, hour: Int? = nil, minute: Int? = nil, second: Int? = nil) -> Date {
-        let calendar = self.calendar
-        
-        var comp = DateComponents()
-        comp.year   = year   ?? calendar.component(.year,   from: self)
-        comp.month  = month  ?? calendar.component(.month,  from: self)
-        comp.day    = day    ?? calendar.component(.day,    from: self)
-        comp.hour   = hour   ?? calendar.component(.hour,   from: self)
-        comp.minute = minute ?? calendar.component(.minute, from: self)
-        comp.second = second ?? calendar.component(.second, from: self)
-        
-        return calendar.date(from: comp)!
+
+    /// **日付を固定**
+    func fixed(year: Int? = nil, month: Int? = nil, day: Int? = nil,
+               hour: Int? = nil, minute: Int? = nil, second: Int? = nil) -> Date
+    {
+        let calendar = Date.sharedCalendar
+        var comp = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: self)
+
+        comp.year = year ?? comp.year
+        comp.month = month ?? comp.month
+        comp.day = day ?? comp.day
+        comp.hour = hour ?? comp.hour
+        comp.minute = minute ?? comp.minute
+        comp.second = second ?? comp.second
+
+        return calendar.date(from: comp) ?? self
     }
-    
-    public func added(year: Int? = nil, month: Int? = nil, day: Int? = nil, hour: Int? = nil, minute: Int? = nil, second: Int? = nil) -> Date {
-        let calendar = self.calendar
-        
-        var comp = DateComponents()
-        comp.year   = (year   ?? 0) + calendar.component(.year,   from: self)
-        comp.month  = (month  ?? 0) + calendar.component(.month,  from: self)
-        comp.day    = (day    ?? 0) + calendar.component(.day,    from: self)
-        comp.hour   = (hour   ?? 0) + calendar.component(.hour,   from: self)
-        comp.minute = (minute ?? 0) + calendar.component(.minute, from: self)
-        comp.second = (second ?? 0) + calendar.component(.second, from: self)
-        
-        return calendar.date(from: comp)!
-    }
-}
-extension Date {
-    public var year: Int {
-        return calendar.component(.year, from: self)
-    }
-    
-    public var month: Int {
-        return calendar.component(.month, from: self)
-    }
-    
-    public var day: Int {
-        return calendar.component(.day, from: self)
-    }
-    
-    public var hour: Int {
-        return calendar.component(.hour, from: self)
-    }
-    
-    public var minute: Int {
-        return calendar.component(.minute, from: self)
-    }
-    
-    public var second: Int {
-        return calendar.component(.second, from: self)
-    }
-    
-    public var weekName: String {
-        let index = calendar.component(.weekday, from: self) - 1 // index値を 1〜7 から 0〜6 にしている
-        return ["日", "月", "火", "水", "木", "金", "土"][index]
+
+    /// **年月日時分秒を加算**
+    func adding(year: Int = 0, month: Int = 0, day: Int = 0,
+                hour: Int = 0, minute: Int = 0, second: Int = 0) -> Date
+    {
+        let calendar = Date.sharedCalendar
+        let comp = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute, second: second)
+        return calendar.date(byAdding: comp, to: self) ?? self
     }
 }
 
-extension Date {
-    public enum SymbolType {
-        case `default`
-        case standalone
-        case veryShort
-        case short
-        case shortStandalone
-        case veryShortStandalone
-        case custom(symbols: [String])
+// MARK: - Date Components の取得
+
+public extension Date {
+    var year: Int { Date.sharedCalendar.component(.year, from: self) }
+    var month: Int { Date.sharedCalendar.component(.month, from: self) }
+    var day: Int { Date.sharedCalendar.component(.day, from: self) }
+    var hour: Int { Date.sharedCalendar.component(.hour, from: self) }
+    var minute: Int { Date.sharedCalendar.component(.minute, from: self) }
+    var second: Int { Date.sharedCalendar.component(.second, from: self) }
+
+    /// 曜日インデックス（0: 日, 1: 月 ... 6: 土）
+    var weekIndex: Int { Date.sharedCalendar.component(.weekday, from: self) - 1 }
+
+    /// 曜日名（例: `"日"` `"月"` `"火"`)
+    var weekName: String { ["日", "月", "火", "水", "木", "金", "土"][weekIndex] }
+}
+
+// MARK: - 日付操作
+
+public extension Date {
+    /// `X` 秒前
+    func secondBefore(_ seconds: Int) -> Date { adding(second: -seconds) }
+
+    /// `X` 秒後
+    func secondAfter(_ seconds: Int) -> Date { adding(second: seconds) }
+
+    /// `X` 分前
+    func minuteBefore(_ minutes: Int) -> Date { adding(minute: -minutes) }
+
+    /// `X` 分後
+    func minuteAfter(_ minutes: Int) -> Date { adding(minute: minutes) }
+
+    /// `X` 時間前
+    func hourBefore(_ hours: Int) -> Date { adding(hour: -hours) }
+
+    /// `X` 時間後
+    func hourAfter(_ hours: Int) -> Date { adding(hour: hours) }
+
+    /// `X` 日前
+    func dayBefore(_ days: Int) -> Date { adding(day: -days) }
+
+    /// `X` 日後
+    func dayAfter(_ days: Int) -> Date { adding(day: days) }
+
+    /// その日の0時00分
+    var startTime: Date { Date.sharedCalendar.startOfDay(for: self) }
+}
+
+// MARK: - 年月日ベースの日付操作
+
+public extension Date {
+    var yesterday: Date { dayBefore(1) }
+    var tomorrow: Date { dayAfter(1) }
+    var oneWeekBefore: Date { dayBefore(7) }
+    var oneWeekAfter: Date { dayAfter(7) }
+    var oneMonthBefore: Date { adding(month: -1) }
+    var oneMonthAfter: Date { adding(month: 1) }
+    var oneYearBefore: Date { adding(year: -1) }
+    var oneYearAfter: Date { adding(year: 1) }
+
+    /// 月初
+    var beginningOfTheMonth: Date {
+        let comp = Date.sharedCalendar.dateComponents([.year, .month], from: self)
+        return Date.sharedCalendar.date(from: comp) ?? self
     }
-    
-    public var weekIndex: Int {
-        return calendar.component(.weekday, from: self) - 1
+
+    /// 月末
+    var endOfTheMonth: Date {
+        beginningOfTheMonth.adding(month: 1).dayBefore(1)
     }
-    
-    public func weeks(_ type: SymbolType = .short, locale: Locale? = nil) -> [String] {
-        let formatter = DateFormatter()
-        formatter.locale = locale ?? calendar.locale
-        
-        switch type {
-        case .`default`:           return formatter.weekdaySymbols
-        case .standalone:          return formatter.standaloneWeekdaySymbols
-        case .veryShort:           return formatter.veryShortWeekdaySymbols
-        case .short:               return formatter.shortWeekdaySymbols
-        case .shortStandalone:     return formatter.shortStandaloneWeekdaySymbols
-        case .veryShortStandalone: return formatter.veryShortStandaloneWeekdaySymbols
-        case let .custom(symbols): return symbols
-        }
+
+    /// 年始
+    var beginningOfTheYear: Date {
+        let comp = Date.sharedCalendar.dateComponents([.year], from: self)
+        return Date.sharedCalendar.date(from: comp) ?? self
     }
-    
-    public func week(_ type: SymbolType = .short, locale: Locale? = nil) -> String {
-        return weeks(type, locale: locale)[weekIndex]
+
+    /// 年末
+    var endOfTheYear: Date {
+        beginningOfTheYear.adding(year: 1).dayBefore(1)
     }
 }
 
-extension Date {
-    public var monthIndex: Int {
-        return calendar.component(.month, from: self) - 1
-    }
-    
-    // SymbolType は 前項の「曜日の取得」で定義したもの
-    public func monthSymbols(_ type: SymbolType = .short, locale: Locale? = nil) -> [String] {
-        let formatter = DateFormatter()
-        formatter.locale = locale ?? calendar.locale
-        
-        switch type {
-        case .`default`:           return formatter.monthSymbols
-        case .standalone:          return formatter.standaloneMonthSymbols
-        case .veryShort:           return formatter.veryShortMonthSymbols
-        case .short:               return formatter.shortMonthSymbols
-        case .shortStandalone:     return formatter.shortStandaloneMonthSymbols
-        case .veryShortStandalone: return formatter.veryShortStandaloneMonthSymbols
-        case let .custom(symbols): return symbols
-        }
-    }
-    
-    public func monthSymbol(_ type: SymbolType = .short, locale: Locale? = nil) -> String {
-        return monthSymbols(type, locale: locale)[monthIndex]
-    }
-}
+// MARK: - 日付フォーマット
 
-extension Date {
-    // ◯秒前
-    public func secondBefore(_ second: Int) -> Date {
-        let day = Calendar.current.date(byAdding: .second, value: -second, to: self)
-        return day!
-    }
-    
-    // ◯秒後
-    public func secondAfter(_ second: Int) -> Date {
-        let day = Calendar.current.date(byAdding: .second, value: second, to: self)
-        return day!
-    }
-    
-    // ◯分前
-    public func minuteBefore(_ minute: Int) -> Date {
-        let day = Calendar.current.date(byAdding: .minute, value: -minute, to: self)
-        return day!
-    }
-    
-    // ◯分後
-    public func minuteAfter(_ minute: Int) -> Date {
-        let day = Calendar.current.date(byAdding: .minute, value: minute, to: self)
-        return day!
-    }
-    
-    // ◯時間前
-    public func hourBefore(_ hour: Int) -> Date {
-        let day = Calendar.current.date(byAdding: .hour, value: -hour, to: self)
-        return day!
-    }
-    
-    // ◯時間後
-    public func hourAfter(_ hour: Int) -> Date {
-        let day = Calendar.current.date(byAdding: .hour, value: hour, to: self)
-        return day!
-    }
-    
-    // その日の0時00分
-    public var startTime: Date {
-        return Calendar.current.startOfDay(for: self)
-    }
-}
+public extension Date {
+    var yyyyMMddHHmmss: String { DateFormatter.yyyyMMddHHmmss.string(from: self) }
+    var yyyyMMddHHmm: String { DateFormatter.yyyyMMddHHmm.string(from: self) }
+    var yyyyMMdd: String { DateFormatter.yyyyMMdd.string(from: self) }
+    var MMdd: String { DateFormatter.MMdd.string(from: self) }
+    var HHmm: String { DateFormatter.HHmm.string(from: self) }
 
-extension Date {
-    public var yesterday: Date {
-        let day = Calendar.current.date(byAdding: .day, value: -1, to: self)
-        return day!
-    }
-    
-    public var tomorrow: Date {
-        let day = Calendar.current.date(byAdding: .day, value: 1, to: self)
-        return day!
-    }
-    
-    // 1週間前
-    public var oneWeekBefore: Date {
-        let day = Calendar.current.date(byAdding: .day, value: -7, to: self)
-        return day!
-    }
-    
-    // 1週間後
-    public var oneWeekAfter: Date {
-        let day = Calendar.current.date(byAdding: .day, value: 7, to: self)
-        return day!
-    }
-    
-    // 1ヶ月前
-    public var oneMonthBefore: Date {
-        let day = Calendar.current.date(byAdding: .month, value: -1, to: self)
-        return day!
-    }
-    
-    // 1ヶ月後
-    public var oneMonthAfter: Date {
-        let day = Calendar.current.date(byAdding: .month, value: 1, to: self)
-        return day!
-    }
-    
-    // 1年前
-    public var oneYearBefore: Date {
-        let day = Calendar.current.date(byAdding: .year, value: -1, to: self)
-        return day!
-    }
-    
-    // 1年後
-    public var oneYearAfter: Date {
-        let day = Calendar.current.date(byAdding: .year, value: 1, to: self)
-        return day!
-    }
-    
-    // 月初
-    public var beginningOfTheMonth: Date {
-        let component = Calendar.current.dateComponents([.year, .month], from: self)
-        return Calendar.current.date(from: component)!
-    }
-    
-    // 月末
-    public var endOfTheMonth: Date {
-        let beginningOfTheMonth = self.beginningOfTheMonth
-        let add = DateComponents(month: 1, day: -1)
-        return Calendar.current.date(byAdding: add, to: beginningOfTheMonth)!
-    }
-    
-    // 年始
-    public var beginningOfTheYear: Date {
-        let component = Calendar.current.dateComponents([.year], from: self)
-        return Calendar.current.date(from: component)!
-    }
-    
-    // 年末
-    public var endOfTheYear: Date {
-        let beginningOfTheYear = self.beginningOfTheYear
-        let add = DateComponents(year: 1, day: -1)
-        return Calendar.current.date(byAdding: add, to: beginningOfTheYear)!
-    }
-}
+    var kanjiyyyyMMddHHmmss: String { DateFormatter.kanjiyyyyMMddHHmmss.string(from: self) }
+    var kanjiyyyyMMddHHmm: String { DateFormatter.kanjiyyyyMMddHHmm.string(from: self) }
+    var kanjiyyyyMMdd: String { DateFormatter.kanjiyyyyMMdd.string(from: self) }
+    var kanjiyyyyMMddE: String { DateFormatter.kanjiyyyyMMddEEE.string(from: self) }
 
-extension Date {
-    public var yyyyMMddHHmmss: String {
-        return DateFormatter.yyyyMMddHHmmss.string(from: self)
-    }
-    
-    public var yyyyMMddHHmm: String {
-        return DateFormatter.yyyyMMddHHmm.string(from: self)
-    }
-    
-    public var yyyyMMdd: String {
-        return DateFormatter.yyyyMMdd.string(from: self)
-    }
-    
-    public var MMdd: String {
-        return DateFormatter.MMdd.string(from: self)
-    }
-    
-    public var HHmm: String {
-        return DateFormatter.HHmm.string(from: self)
-    }
-    
-    public var kanjiyyyyMMddHHmmss: String {
-        return DateFormatter.kanjiyyyyMMddHHmmss.string(from: self)
-    }
-    
-    public var kanjiyyyyMMddHHmm: String {
-        return DateFormatter.kanjiyyyyMMddHHmm.string(from: self)
-    }
-    
-    public var kanjiyyyyMMdd: String {
-        return DateFormatter.kanjiyyyyMMdd.string(from: self)
-    }
-    
-    public var kanjiMMdd: String {
-        return DateFormatter.kanjiMMdd.string(from: self)
-    }
-    
-    public var kanjiHHmm: String {
-        return DateFormatter.kanjiHHmm.string(from: self)
-    }
-    
-    public var kanjiyyyyMMddE: String {
-        return DateFormatter.kanjiyyyyMMddE.string(from: self)
-    }
+    /// ISO8601 フォーマット（ミリ秒なし）
+    var iso8601: String { ISO8601DateFormatter.full.string(from: self) }
+
+    /// ISO8601 フォーマット（ミリ秒あり）
+    var iso8601WithMilliseconds: String { ISO8601DateFormatter.fullWithMilliseconds.string(from: self) }
 }
