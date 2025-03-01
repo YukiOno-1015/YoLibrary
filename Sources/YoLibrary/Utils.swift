@@ -163,6 +163,27 @@ public class Utils {
         }
     }
 
+    // MARK: - 🌐 タブバーの外観設定
+
+    /// **タブバーの外観を設定**
+    ///
+    /// - Parameters:
+    ///   - tabBarController: 対象の `UITabBarController`
+    ///   - backgroundColor: 背景色
+    ///   - tintColor: アイコン・選択時の色
+    ///   - isTranslucent: 半透明フラグ（デフォルト: `false`）
+    public static func setTabBarAppearance(
+        _ tabBarController: UITabBarController,
+        backgroundColor: UIColor,
+        tintColor: UIColor,
+        isTranslucent: Bool = false
+    ) {
+        let tabBar = tabBarController.tabBar
+        tabBar.backgroundColor = backgroundColor
+        tabBar.tintColor = tintColor
+        tabBar.isTranslucent = isTranslucent
+    }
+
     // MARK: - 🌙 ダークモード判定
 
     /// **現在のテーマがダークモードか判定**
