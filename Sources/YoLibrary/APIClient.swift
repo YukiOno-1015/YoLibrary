@@ -1,7 +1,7 @@
 import Foundation
 
 /// API のエラー定義
-enum APIError: Error {
+public enum APIError: Error {
     case invalidURL // 無効なURL
     case requestFailed(Error) // リクエスト失敗
     case invalidResponse // 無効なレスポンス
@@ -26,7 +26,7 @@ enum APIError: Error {
 }
 
 /// HTTP メソッドの定義（`PUT`, `PATCH`, `DELETE` 追加）
-enum HTTPMethod: String {
+public enum HTTPMethod: String {
     case get = "GET"
     case post = "POST"
     case put = "PUT"
@@ -35,17 +35,17 @@ enum HTTPMethod: String {
 }
 
 /// Content-Type (メディアタイプ)
-enum MediaType: String {
+public enum MediaType: String {
     case json = "application/json"
 }
 
 /// API のエンドポイントを定義
-enum APIEndpoint {
+public enum APIEndpoint {
     case memos
 }
 
 /// 汎用的な API クライアントクラス
-class APIClient {
+open class APIClient {
     /// シングルトンインスタンス
     static let shared = APIClient()
 
