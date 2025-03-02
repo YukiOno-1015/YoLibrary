@@ -47,7 +47,7 @@ public enum APIEndpoint {
 /// 汎用的な API クライアントクラス
 open class APIClient {
     /// シングルトンインスタンス
-    static let shared = APIClient()
+    public static let shared = APIClient()
 
     /// イニシャライザ（外部からのインスタンス化を防ぐ）
     private init() {}
