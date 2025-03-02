@@ -9,7 +9,7 @@ public enum APIError: Error {
     case statusCode(Int) // ステータスコードエラー
 
     /// エラーメッセージを日本語で表示
-    var localizedDescription: String {
+    public var localizedDescription: String {
         switch self {
         case .invalidURL:
             return "無効なURLです"
@@ -25,7 +25,7 @@ public enum APIError: Error {
     }
 }
 
-/// HTTP メソッドの定義（`PUT`, `PATCH`, `DELETE` 追加）
+/// HTTP メソッドの定義
 public enum HTTPMethod: String {
     case get = "GET"
     case post = "POST"
@@ -42,10 +42,18 @@ public enum MediaType: String {
 /// API のエンドポイントを定義
 public enum APIEndpoint {
     case memos
+
+    /// エンドポイントのURLを取得
+    public var url: URL? {
+        switch self {
+        case .memos:
+            return URL(string: "https://api.example.com/memos")
+        }
+    }
 }
 
 /// 汎用的な API クライアントクラス
-open class APIClient {
+public final class APIClient {
     /// シングルトンインスタンス
     public static let shared = APIClient()
 
@@ -56,13 +64,13 @@ open class APIClient {
      * APIリクエストを実行する汎用メソッド
      *
      * - Parameters:
-     *   - url: API のエンドポイント
+     *   - url: API のエンドポイントの URL
      *   - method: HTTP メソッド（GET, POST, PUT, DELETE など）
      *   - parameters: API に送信するパラメータ（GETの場合はURLクエリ、POST/PUT/PATCHの場合はボディ）
      *   - headers: 追加のヘッダー情報
      *   - completion: API のレスポンスを非同期で取得するコールバック
      */
-    func request<T: Decodable>(
+    public func request<T: Decodable>(
         url: URL,
         method: HTTPMethod,
         parameters: [String: Any]? = nil,
@@ -83,7 +91,7 @@ open class APIClient {
             request = URLRequest(url: url)
             if let parameters {
                 request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
-                if method != .get { // `GET` には `Content-Type` を付けない
+                if method != .get {
                     request.setValue(MediaType.json.rawValue, forHTTPHeaderField: "Content-Type")
                 }
             }
@@ -94,14 +102,8 @@ open class APIClient {
         // ヘッダーを設定
         headers?.forEach { request.setValue($1, forHTTPHeaderField: $0) }
 
-        Logger.debug(message: "Request: \(method.rawValue) \(request.url?.absoluteString ?? "No URL")")
-        Logger.debug(message: "Headers: \(String(describing: request.allHTTPHeaderFields))")
-
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-            guard self != nil else { return }
-
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error {
-                Logger.error(message: "Request Failed: \(error.localizedDescription)")
                 completion(.failure(.requestFailed(error)))
                 return
             }
@@ -110,8 +112,6 @@ open class APIClient {
                 completion(.failure(.invalidResponse))
                 return
             }
-
-            Logger.debug(message: "Response Status: \(httpResponse.statusCode)")
 
             guard (200 ... 299).contains(httpResponse.statusCode) else {
                 completion(.failure(.statusCode(httpResponse.statusCode)))
@@ -125,10 +125,8 @@ open class APIClient {
 
             do {
                 let decodedData = try JSONDecoder().decode(T.self, from: data)
-                Logger.debug(message: "Decoded Data: \(decodedData)")
                 completion(.success(decodedData))
             } catch let decodingError {
-                Logger.error(message: "Decoding Failed: \(decodingError)")
                 completion(.failure(.decodingFailed(decodingError)))
             }
         }
