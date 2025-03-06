@@ -77,6 +77,7 @@ public class Utils {
     public static func showLoading(in vc: UIViewController) {
         DispatchQueue.main.async {
             if loadingIndicator == nil {
+                Logger.debug(message: "ローディング開始")
                 let indicator = UIActivityIndicatorView(style: .large)
                 indicator.center = vc.view.center
                 indicator.hidesWhenStopped = true
@@ -84,7 +85,6 @@ public class Utils {
                 vc.view.bringSubviewToFront(indicator)
                 loadingIndicator = indicator
             }
-            Logger.debug(message: "ローディング開始")
             loadingIndicator?.startAnimating()
         }
     }
