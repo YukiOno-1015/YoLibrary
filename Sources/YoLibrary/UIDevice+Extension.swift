@@ -3,9 +3,9 @@ import UIKit
 
 // MARK: - UIDevice Extension
 
-extension UIDevice {
+public extension UIDevice {
     /// デバイスの型番を取得
-    public static var deviceIdentifier: String {
+    static var deviceIdentifier: String {
         var systemInfo = utsname()
         uname(&systemInfo)
         let identifier = Mirror(reflecting: systemInfo.machine).children
@@ -19,7 +19,7 @@ extension UIDevice {
     }
 
     /// デバイスのモデル名を取得（最新機種含む）
-    public static var phoneModel: String {
+    static var phoneModel: String {
         let identifier = deviceIdentifier
         return deviceMap[identifier] ?? identifier
     }
@@ -133,35 +133,35 @@ extension UIDevice {
     ]
 
     /// 現在のデバイスがシミュレーターかどうか
-    public static var isSimulator: Bool {
+    static var isSimulator: Bool {
         phoneModel == "Simulator"
     }
 
     /// 現在のデバイスが iPad かどうか
-    public static var isPad: Bool {
+    static var isPad: Bool {
         UIDevice.current.userInterfaceIdiom == .pad
     }
 }
 
 // MARK: - 画面サイズ関連
 
-extension UIDevice {
+public extension UIDevice {
     /// 画面の横幅に対する比率でサイズを計算
-    public static func calcWidth(_ ratio: CGFloat) -> CGFloat {
+    static func calcWidth(_ ratio: CGFloat) -> CGFloat {
         UIScreen.main.bounds.width * ratio
     }
 
     /// 画面の縦幅に対する比率でサイズを計算
-    public static func calcHeight(_ ratio: CGFloat) -> CGFloat {
+    static func calcHeight(_ ratio: CGFloat) -> CGFloat {
         UIScreen.main.bounds.height * ratio
     }
 }
 
 // MARK: - UI要素の高さ取得
 
-extension UIDevice {
+public extension UIDevice {
     /// ステータスバーの高さ取得（非推奨APIを回避）
-    public static var statusBarHeight: CGFloat {
+    static var statusBarHeight: CGFloat {
         UIApplication.shared.connectedScenes
             .compactMap {
                 ($0 as? UIWindowScene)?.statusBarManager?.statusBarFrame.height
@@ -170,22 +170,22 @@ extension UIDevice {
     }
 
     /// ナビゲーションバーの高さ取得
-    public static func navigationBarHeight(in vc: UIViewController) -> CGFloat {
+    static func navigationBarHeight(in vc: UIViewController) -> CGFloat {
         vc.navigationController?.navigationBar.frame.height ?? 0
     }
 
     /// ステータスバーとナビゲーションバーの合計高さ取得
-    public static func headerHeight(in vc: UIViewController) -> CGFloat {
+    static func headerHeight(in vc: UIViewController) -> CGFloat {
         statusBarHeight + navigationBarHeight(in: vc)
     }
 
     /// タブバーの高さ取得
-    public static func tabBarHeight(in vc: UIViewController) -> CGFloat {
+    static func tabBarHeight(in vc: UIViewController) -> CGFloat {
         vc.tabBarController?.tabBar.frame.height ?? 0
     }
 
     /// ステータスバー・ナビゲーションバー・タブバーの合計高さ取得
-    public static func headerWithTabBarHeight(in vc: UIViewController)
+    static func headerWithTabBarHeight(in vc: UIViewController)
         -> CGFloat
     {
         headerHeight(in: vc) + tabBarHeight(in: vc)
