@@ -75,6 +75,7 @@ public class Utils {
 
     /// **ローディングを表示**
     public static func showLoading(in vc: UIViewController) {
+        Logger.debug(message: "UIViewController: \(vc.self)")
         DispatchQueue.main.async {
             if loadingIndicator == nil {
                 Logger.debug(message: "ローディング開始")
