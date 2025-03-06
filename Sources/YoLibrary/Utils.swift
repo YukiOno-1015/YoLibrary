@@ -84,6 +84,7 @@ public class Utils {
                 vc.view.bringSubviewToFront(indicator)
                 loadingIndicator = indicator
             }
+            Logger.debug(message: "ローディング開始")
             loadingIndicator?.startAnimating()
         }
     }
@@ -94,6 +95,7 @@ public class Utils {
             loadingIndicator?.stopAnimating()
             loadingIndicator?.removeFromSuperview()
             loadingIndicator = nil
+            Logger.debug(message: "ローディング終了")
         }
     }
 
