@@ -9,13 +9,13 @@ let package = Package(
         .iOS(.v15),
         .macOS(.v10_13),
         .tvOS(.v12),
-        .watchOS(.v4),
+        .watchOS(.v4)
     ], products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "YoLibrary",
             targets: ["YoLibrary"]
-        ),
+        )
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -27,6 +27,6 @@ let package = Package(
         .target(
             name: "YoLibrary",
             dependencies: []
-        ),
+        )
     ]
 )

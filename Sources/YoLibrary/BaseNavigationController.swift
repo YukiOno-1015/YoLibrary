@@ -14,6 +14,11 @@ open class BaseNavigationController: UINavigationController {
 
     /// **ナビゲーションバーの外観を設定（オーバーライド可能）**
     open func setupNavigationBarAppearance() {
-        Utils.setNavigationBarAppearance(self, backgroundColor: .systemBackground, titleColor: .label, isTranslucent: false)
+        Utils.setNavigationBarAppearance(
+            self,
+            backgroundColor: .systemBackground,
+            titleColor: .label,
+            isTranslucent: false
+        )
     }
 }

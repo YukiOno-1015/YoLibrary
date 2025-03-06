@@ -40,7 +40,12 @@ public class Utils {
     }
 
     /// **ナビゲーションバーの外観を設定**
-    public static func setNavigationBarAppearance(_ nav: UINavigationController?, backgroundColor: UIColor, titleColor: UIColor, isTranslucent: Bool = false) {
+    public static func setNavigationBarAppearance(
+        _ nav: UINavigationController?,
+        backgroundColor: UIColor,
+        titleColor: UIColor,
+        isTranslucent: Bool = false
+    ) {
         guard let navBar = nav?.navigationBar else { return }
 
         let appearance = UINavigationBarAppearance()
@@ -76,6 +81,7 @@ public class Utils {
                 indicator.center = vc.view.center
                 indicator.hidesWhenStopped = true
                 vc.view.addSubview(indicator)
+                vc.view.bringSubviewToFront(indicator)
                 loadingIndicator = indicator
             }
             loadingIndicator?.startAnimating()
@@ -125,7 +131,12 @@ public class Utils {
     ///   - message: 表示するメッセージ
     ///   - duration: 表示時間（デフォルト: `2.0`秒）
     public static func showToast(on vc: UIViewController, message: String, duration: TimeInterval = 2.0) {
-        let toastLabel = UILabel(frame: CGRect(x: 20, y: vc.view.frame.height - 120, width: vc.view.frame.width - 40, height: 50))
+        let toastLabel = UILabel(frame: CGRect(
+            x: 20,
+            y: vc.view.frame.height - 120,
+            width: vc.view.frame.width - 40,
+            height: 50
+        ))
         toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         toastLabel.textColor = .white
         toastLabel.textAlignment = .center

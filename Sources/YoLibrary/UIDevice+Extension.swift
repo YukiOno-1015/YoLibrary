@@ -51,7 +51,7 @@ public extension UIDevice {
 
         // ---- シミュレーター ----
         "i386": "Simulator",
-        "x86_64": "Simulator",
+        "x86_64": "Simulator"
     ]
 
     /// 現在のデバイスがシミュレーターかどうか

@@ -16,10 +16,10 @@ public extension UIColor {
     /// RGBA のカラーを Int で指定
     convenience init(rgba: Int) {
         self.init(
-            red: CGFloat((rgba & 0xFF00_0000) >> 24) / 255.0,
-            green: CGFloat((rgba & 0x00FF_0000) >> 16) / 255.0,
-            blue: CGFloat((rgba & 0x0000_FF00) >> 8) / 255.0,
-            alpha: CGFloat(rgba & 0x0000_00FF) / 255.0
+            red: CGFloat((rgba & 0xFF000000) >> 24) / 255.0,
+            green: CGFloat((rgba & 0x00FF0000) >> 16) / 255.0,
+            blue: CGFloat((rgba & 0x0000FF00) >> 8) / 255.0,
+            alpha: CGFloat(rgba & 0x000000FF) / 255.0
         )
     }
 

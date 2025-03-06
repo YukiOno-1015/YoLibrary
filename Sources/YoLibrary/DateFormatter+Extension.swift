@@ -64,7 +64,10 @@ public extension DateFormatter {
     static let kanjiyyyyMMddEEEHHmm = create(format: "yyyy年MM月dd日 (EEE) HH時mm分", locale: Locale(identifier: "ja_JP"))
 
     /// `yyyy年MM月dd日 (EEE) HH時mm分ss秒`
-    static let kanjiyyyyMMddEEEHHmmss = create(format: "yyyy年MM月dd日 (EEE) HH時mm分ss秒", locale: Locale(identifier: "ja_JP"))
+    static let kanjiyyyyMMddEEEHHmmss = create(
+        format: "yyyy年MM月dd日 (EEE) HH時mm分ss秒",
+        locale: Locale(identifier: "ja_JP")
+    )
 }
 
 // MARK: - ISO8601DateFormatter 拡張
@@ -75,7 +78,7 @@ public extension ISO8601DateFormatter {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [
             .withFullDate, .withTime, .withTimeZone,
-            .withDashSeparatorInDate, .withColonSeparatorInTime,
+            .withDashSeparatorInDate, .withColonSeparatorInTime
         ]
         return formatter
     }()
@@ -86,7 +89,7 @@ public extension ISO8601DateFormatter {
         formatter.formatOptions = [
             .withFullDate, .withTime, .withTimeZone,
             .withDashSeparatorInDate, .withColonSeparatorInTime,
-            .withFractionalSeconds,
+            .withFractionalSeconds
         ]
         return formatter
     }()

@@ -1,0 +1,38 @@
+# format options
+--allman false                   # 波括弧 `{` を次の行に配置しない
+--binarygrouping none            # 2進数リテラルのグルーピングなし
+--closingparen balanced          # `)` の位置をバランスよく配置
+--commas inline                   # カンマの後に改行しない（同じ行）
+--conflictmarkers reject          # マージの競合マーカーを拒否
+--decimalgrouping none            # 10進数のグルーピングなし
+--elseposition same-line          # `else` を同じ行に配置
+--empty void                      # 空のクロージャは `Void` と表示
+--exponentcase lowercase          # 指数表記の `e` を小文字に統一
+--exponentgrouping disabled       # 指数表記のグルーピングを無効化
+--fractiongrouping disabled       # 小数点のグルーピングを無効化
+--fragment false                  # 部分的なコードを無視
+--header ignore                   # ファイルのヘッダーコメントを無視
+--hexgrouping none                # 16進数のグルーピングなし
+--hexliteralcase uppercase        # 16進数リテラルは大文字
+--ifdef indent                    # `#if` 文はインデントする
+--importgrouping alphabetized     # インポートをアルファベット順に並べる
+--indent 4                        # インデントはスペース4つ
+--indentcase false                # `switch` の `case` をインデントしない
+--linebreaks lf                   # 改行コードは LF
+--octalgrouping none              # 8進数リテラルのグルーピングなし
+--operatorfunc spaced             # 演算子の前後にスペースを入れる
+--patternlet hoist                # `let` をパターンの前に出す
+--ranges no-space                 # 範囲演算子 (`...` や `..<`) の前後にスペースを入れない
+--self remove                     # 不要な `self` を削除
+--selfrequired                    # 必要な場合は `self` を付ける
+--semicolons inline                # 行末のセミコロンを削除
+--stripunusedargs closure-only     # 使われていないクロージャの引数を削除
+--trailingclosures                 # 可能な場合はトレイリングクロージャを使用
+--trimwhitespace always            # 行末の不要な空白を削除
+--wraparguments before-first       # 関数の引数を最初の引数の前で改行
+--wrapcollections before-first     # 配列や辞書の要素を最初の要素の前で改行
+--maxwidth 120
+
+
+# file options
+--exclude Pods,Carthage           # `Pods` や `Carthage` のディレクトリをフォーマット対象から除外

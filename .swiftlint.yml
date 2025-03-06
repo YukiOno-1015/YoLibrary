@@ -1,0 +1,60 @@
+# SwiftFormat に合わせた SwiftLint の設定
+
+# 有効にするルール（SwiftFormat に準拠）
+opt_in_rules:
+  - empty_count
+  - sorted_imports
+  - attributes
+  - closure_end_indentation
+  - explicit_init
+  - first_where
+  - joined_default_parameter
+  - number_separator
+  - prefer_self_in_static_references
+  - trailing_closure
+  - redundant_self_in_closure
+  - superfluous_else
+  - trailing_comma
+  - indentation_width
+
+# 無効にするルール（Xcodeの自動生成コードに矛盾するものを無効化）
+disabled_rules:
+  - trailing_whitespace
+  - force_cast
+  - force_try
+  - function_body_length
+  - type_body_length
+  - identifier_name
+  - redundant_optional_initialization
+  - unused_optional_binding # `if let _ = value {}` の警告を無効化
+  - cyclomatic_complexity # 自動生成コードに影響を与えないように無効化
+  - attributes # 自動生成コードでエラーが出るため無効化
+
+# SwiftLint の解析ルール（analyzer_rules）に `explicit_self` を追加
+analyzer_rules:
+  - explicit_self
+
+# インデントと改行（opt_in_rules に追加したため有効になる）
+indentation_width: 4
+line_length:
+  warning: 120
+  error: 150
+
+# import の並び順を統一（SwiftFormat の `--importgrouping alphabetized` に対応）
+sorted_imports: true
+
+# `self` の扱い（SwiftFormat の `--self remove` に合わせる）
+redundant_self_in_closure: warning
+
+# トレイリングクロージャを強制（SwiftFormat の `--trailingclosures` に対応）
+trailing_closure: warning
+
+# `guard` などで `return` が不要な場合は省略（SwiftFormat に準拠）
+superfluous_else: warning
+
+# Xcodeの自動生成コードをLintのチェック対象から除外
+excluded:
+  - "**/Generated/**"
+  - "**/MemoChoUITestsLaunchTests.swift"
+  - "**/SceneDelegate.swift"
+  - "**/LocalizableConstants.swift"

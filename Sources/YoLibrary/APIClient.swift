@@ -113,7 +113,7 @@ public final class APIClient {
                 return
             }
 
-            guard (200 ... 299).contains(httpResponse.statusCode) else {
+            guard (200...299).contains(httpResponse.statusCode) else {
                 completion(.failure(.statusCode(httpResponse.statusCode)))
                 return
             }

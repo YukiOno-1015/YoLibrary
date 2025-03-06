@@ -105,7 +105,8 @@ public enum Logger {
         guard isLoggingEnabled else { return }
 
         let fileName = file.split(separator: "/").last ?? "Unknown"
-        let logMessage = "[\(category.rawValue)] [\(level.logLevelDescription)] \(fileName):\(line) \(function) -> \(message)"
+        let logMessage =
+            "[\(category.rawValue)] [\(level.logLevelDescription)] \(fileName):\(line) \(function) -> \(message)"
 
         #if DEBUG
             let osLog = getOSLog(for: category)

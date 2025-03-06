@@ -14,6 +14,11 @@ open class BaseTabBarController: UITabBarController {
 
     /// **タブバーの外観を設定（オーバーライド可能）**
     open func setupTabBarAppearance() {
-        Utils.setTabBarAppearance(self, backgroundColor: .systemBackground, tintColor: .systemBlue, isTranslucent: false)
+        Utils.setTabBarAppearance(
+            self,
+            backgroundColor: .systemBackground,
+            tintColor: .systemBlue,
+            isTranslucent: false
+        )
     }
 }
