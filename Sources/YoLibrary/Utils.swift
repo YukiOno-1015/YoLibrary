@@ -137,9 +137,9 @@ public class Utils {
     ) {
         showAlert(
             on: vc,
-            title: Utils.localized("error", bundle: Bundle.main),
+            title: Utils.localized("error", bundle: Bundle.yoLibrary),
             message: message,
-            okTitle: Utils.localized("close", bundle: Bundle.main),
+            okTitle: Utils.localized("close", bundle: Bundle.yoLibrary),
             okAction: handler
         )
     }

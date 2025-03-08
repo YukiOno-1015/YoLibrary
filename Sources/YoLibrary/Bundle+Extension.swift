@@ -22,7 +22,7 @@ public extension Bundle {
 
         Logger.debug(message: "🌏 現在の言語: \(preferredLanguage)")
         Logger.debug(message: bundle.path(forResource: preferredLanguage, ofType: "lproj") ?? "なし")
-        if let path = bundle.path(forResource: preferredLanguage, ofType: "lproj"),
+        if let path = bundle.path(forResource: preferredLanguage, ofType: "lproj", inDirectory: "Resources"),
            let localizedBundle = Bundle(path: path)
         {
             return localizedBundle
