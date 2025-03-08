@@ -13,7 +13,7 @@ public enum APIError: Error {
     public var localizedDescription: String {
         switch self {
         case .invalidURL:
-            return Utils.localized("invalid_url"y)
+            return Utils.localized("invalid_url")
 
         case let .requestFailed(error):
             let format = Utils.localized("request_failed")
