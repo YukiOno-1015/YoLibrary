@@ -15,25 +15,25 @@ public enum APIError: Error {
 
         switch self {
         case .invalidURL:
-            return NSLocalizedString("invalid_url", bundle: bundle, comment: "")
+            return Utils.lstr("invalid_url")
 
         case let .requestFailed(error):
-            let format = NSLocalizedString("request_failed", bundle: bundle, comment: "")
+            let format = Utils.lstr("request_failed")
             return String(format: format, error.localizedDescription)
 
         case .invalidResponse:
-            return NSLocalizedString("invalid_response", bundle: bundle, comment: "")
+            return Utils.lstr("invalid_response")
 
         case let .decodingFailed(error):
-            let format = NSLocalizedString("decoding_failed", bundle: bundle, comment: "")
+            let format = Utils.lstr("decoding_failed")
             return String(format: format, error.localizedDescription)
 
         case let .statusCode(code):
-            let format = NSLocalizedString("status_code", bundle: bundle, comment: "")
+            let format = Utils.lstr("status_code")
             return String(format: format, "\(code)")
 
         case .authenticationFailed:
-            return NSLocalizedString("authentication_failed", bundle: bundle, comment: "")
+            return Utils.lstr("authentication_failed")
         }
     }
 }

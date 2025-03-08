@@ -136,9 +136,9 @@ public class Utils {
 
         showAlert(
             on: vc,
-            title: NSLocalizedString("error", bundle: bundle, comment: ""),
+            title: Utils.lstr("error"),
             message: message,
-            okTitle: NSLocalizedString("close", bundle: bundle, comment: ""),
+            okTitle: Utils.lstr("close"),
             okAction: handler
         )
     }
