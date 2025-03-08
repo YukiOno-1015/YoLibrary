@@ -75,17 +75,19 @@ public class Utils {
 
     /// **ローディングを表示**
     public static func showLoading(in vc: UIViewController) {
-        Logger.debug(message: "UIViewController: \(vc.self)")
+        Logger.debug(message: "UIViewController: \(vc.title ?? "")")
         DispatchQueue.main.async {
             if loadingIndicator == nil {
-                Logger.debug(message: "ローディング開始")
+                Logger.debug(message: "ローディング設定開始")
                 let indicator = UIActivityIndicatorView(style: .large)
                 indicator.center = vc.view.center
-                indicator.hidesWhenStopped = true
+                indicator.hidesWhenStopped = false
                 vc.view.addSubview(indicator)
                 vc.view.bringSubviewToFront(indicator)
                 loadingIndicator = indicator
+                Logger.debug(message: "ローディング設定完了")
             }
+            Logger.debug(message: "ローディング開始")
             loadingIndicator?.startAnimating()
         }
     }
@@ -93,10 +95,12 @@ public class Utils {
     /// **ローディングを非表示**
     public static func hideLoading() {
         DispatchQueue.main.async {
+            Logger.debug(message: "ローディング終了")
             loadingIndicator?.stopAnimating()
+            Logger.debug(message: "ローディング設定リセット開始")
             loadingIndicator?.removeFromSuperview()
             loadingIndicator = nil
-            Logger.debug(message: "ローディング終了")
+            Logger.debug(message: "ローディング設定リセット終了")
         }
     }
 
