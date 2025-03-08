@@ -19,7 +19,7 @@ public class Utils {
     /// - Parameter key: `Localizable.strings` に定義したキー
     /// - Returns: ローカライズされた文字列
     public static func lstr(_ key: String) -> String {
-        NSLocalizedString(key, comment: "")
+        NSLocalizedString(key, bundle: Bundle.yoLibrary, comment: "")
     }
 
     // MARK: - 🎨 UI & ナビゲーション設定
