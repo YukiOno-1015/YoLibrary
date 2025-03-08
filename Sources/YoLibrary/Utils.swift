@@ -20,8 +20,8 @@ public class Utils {
     ///   - key: `Localizable.strings` に定義されたキー
     ///   - bundle: 取得対象の `Bundle`（デフォルトは `nil`）
     /// - Returns: ローカライズされた文字列（存在しない場合は `key` をそのまま返す）
-    public static func localized(_ key: String) -> String {
-        let string = NSLocalizedString("\(key)", comment: "")
+    public static func localized(_ key: String, bundle: Bundle? = nil) -> String {
+        let string = NSLocalizedString("\(key)", bundle: bundle ?? Bundle.main, comment: "")
         return string == "\(key)" ? "[\(key)]" : string // 未翻訳なら `"[key]"` を返す
     }
 
@@ -135,11 +135,13 @@ public class Utils {
         message: String,
         handler: (() -> Void)? = nil
     ) {
+        let bundle = Bundle.module
+
         showAlert(
             on: vc,
-            title: Utils.localized("error"),
+            title: Utils.localized("error", bundle: Bundle.yoLibrary),
             message: message,
-            okTitle: Utils.localized("close"),
+            okTitle: Utils.localized("close", bundle: Bundle.yoLibrary),
             okAction: handler
         )
     }

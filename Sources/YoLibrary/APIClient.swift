@@ -13,25 +13,25 @@ public enum APIError: Error {
     public var localizedDescription: String {
         switch self {
         case .invalidURL:
-            return Utils.localized("invalid_url")
+            return Utils.localized("invalid_url", bundle: Bundle.yoLibrary)
 
         case let .requestFailed(error):
-            let format = Utils.localized("request_failed")
+            let format = Utils.localized("request_failed", bundle: Bundle.yoLibrary)
             return String(format: format, error.localizedDescription)
 
         case .invalidResponse:
-            return Utils.localized("invalid_response")
+            return Utils.localized("invalid_response", bundle: Bundle.yoLibrary)
 
         case let .decodingFailed(error):
-            let format = Utils.localized("decoding_failed")
+            let format = Utils.localized("decoding_failed", bundle: Bundle.yoLibrary)
             return String(format: format, error.localizedDescription)
 
         case let .statusCode(code):
-            let format = Utils.localized("status_code")
+            let format = Utils.localized("status_code", bundle: Bundle.yoLibrary)
             return String(format: format, "\(code)")
 
         case .authenticationFailed:
-            return Utils.localized("authentication_failed")
+            return Utils.localized("authentication_failed", bundle: Bundle.yoLibrary)
         }
     }
 }
