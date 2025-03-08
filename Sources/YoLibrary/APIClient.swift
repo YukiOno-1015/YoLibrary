@@ -7,6 +7,7 @@ public enum APIError: Error {
     case invalidResponse // 無効なレスポンス
     case decodingFailed(Error) // JSON デコード失敗
     case statusCode(Int) // ステータスコードエラー
+    case authenticationFailed // 認証エラー
 
     /// エラーメッセージを日本語で表示
     public var localizedDescription: String {
@@ -21,6 +22,8 @@ public enum APIError: Error {
             return "デコードに失敗しました: \(error.localizedDescription)"
         case let .statusCode(code):
             return "サーバーエラー: ステータスコード \(code)"
+        case .authenticationFailed:
+            return "認証に失敗しました"
         }
     }
 }
@@ -39,19 +42,6 @@ public enum MediaType: String {
     case json = "application/json"
 }
 
-/// API のエンドポイントを定義
-public enum APIEndpoint {
-    case memos
-
-    /// エンドポイントのURLを取得
-    public var url: URL? {
-        switch self {
-        case .memos:
-            return URL(string: "https://api.example.com/memos")
-        }
-    }
-}
-
 /// 汎用的な API クライアントクラス
 public final class APIClient {
     /// シングルトンインスタンス
@@ -66,7 +56,7 @@ public final class APIClient {
      * - Parameters:
      *   - url: API のエンドポイントの URL
      *   - method: HTTP メソッド（GET, POST, PUT, DELETE など）
-     *   - parameters: API に送信するパラメータ（GETの場合はURLクエリ、POST/PUT/PATCHの場合はボディ）
+     *   - parameters: API に送信するパラメータ（GET の場合は URL クエリ、POST/PUT/PATCH の場合はボディ）
      *   - headers: 追加のヘッダー情報
      *   - completion: API のレスポンスを非同期で取得するコールバック
      */
