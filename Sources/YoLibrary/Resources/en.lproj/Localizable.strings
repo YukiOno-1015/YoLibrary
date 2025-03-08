@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  YoLibrary
+
+  Created by honoka on 2025/03/09.
+  
+*/
+invalid_url = "Invalid URL";
+request_failed = "Request failed: %@";
+invalid_response = "Invalid response";
+decoding_failed = "Decoding failed: %@";
+status_code = "Server error: Status code %@";
+authentication_failed = "Authentication failed";

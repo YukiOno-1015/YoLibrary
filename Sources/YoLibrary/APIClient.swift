@@ -2,28 +2,38 @@ import Foundation
 
 /// API のエラー定義
 public enum APIError: Error {
-    case invalidURL // 無効なURL
-    case requestFailed(Error) // リクエスト失敗
-    case invalidResponse // 無効なレスポンス
-    case decodingFailed(Error) // JSON デコード失敗
-    case statusCode(Int) // ステータスコードエラー
-    case authenticationFailed // 認証エラー
+    case invalidURL
+    case requestFailed(Error)
+    case invalidResponse
+    case decodingFailed(Error)
+    case statusCode(Int)
+    case authenticationFailed
 
-    /// エラーメッセージを日本語で表示
+    /// エラーメッセージを多言語対応
     public var localizedDescription: String {
+        let bundle = Bundle.module // SwiftPMのリソースを取得
+
         switch self {
         case .invalidURL:
-            return "無効なURLです"
+            return NSLocalizedString("invalid_url", bundle: bundle, comment: "")
+
         case let .requestFailed(error):
-            return "リクエストに失敗しました: \(error.localizedDescription)"
+            let format = NSLocalizedString("request_failed", bundle: bundle, comment: "")
+            return String(format: format, error.localizedDescription)
+
         case .invalidResponse:
-            return "無効なレスポンスです"
+            return NSLocalizedString("invalid_response", bundle: bundle, comment: "")
+
         case let .decodingFailed(error):
-            return "デコードに失敗しました: \(error.localizedDescription)"
+            let format = NSLocalizedString("decoding_failed", bundle: bundle, comment: "")
+            return String(format: format, error.localizedDescription)
+
         case let .statusCode(code):
-            return "サーバーエラー: ステータスコード \(code)"
+            let format = NSLocalizedString("status_code", bundle: bundle, comment: "")
+            return String(format: format, "\(code)")
+
         case .authenticationFailed:
-            return "認証に失敗しました"
+            return NSLocalizedString("authentication_failed", bundle: bundle, comment: "")
         }
     }
 }

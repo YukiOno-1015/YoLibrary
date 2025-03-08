@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "YoLibrary",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v15),
         .macOS(.v10_13),
@@ -26,7 +27,8 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "YoLibrary",
-            dependencies: []
+            dependencies: [],
+            resources: [.process("Resources")]
         )
     ]
 )
