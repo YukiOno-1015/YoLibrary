@@ -20,7 +20,7 @@ public class Utils {
     ///   - key: `Localizable.strings` に定義されたキー
     ///   - bundle: 取得対象の `Bundle`（デフォルトは `Bundle.yoLibrary`）
     /// - Returns: ローカライズされた文字列（存在しない場合は `key` をそのまま返す）
-    public static func localized(_ key: StaticString, bundle: Bundle = .yoLibrary) -> String {
+    public static func localized(_ key: String, bundle: Bundle = .yoLibrary) -> String {
         let string = NSLocalizedString("\(key)", bundle: bundle, comment: "")
         return string == "\(key)" ? "[\(key)]" : string // 未翻訳なら `"[key]"` を返す
     }
