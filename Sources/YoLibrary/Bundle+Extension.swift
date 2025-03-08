@@ -4,7 +4,6 @@
 //
 //  Created by honoka on 2025/03/09.
 //
-
 import Foundation
 
 public extension Bundle {
@@ -16,18 +15,27 @@ public extension Bundle {
         return Locale(identifier: locale).languageCode ?? "en" // `ja-JP` → `ja`
     }
 
+    /// **確実に `Localizable.strings` のバンドルを取得**
     static var yoLibrary: Bundle {
         let bundle = Bundle.module
         let preferredLanguage = preferredLanguageCode
 
         Logger.debug(message: "🌏 現在の言語: \(preferredLanguage)")
-        Logger.debug(message: bundle.path(forResource: preferredLanguage, ofType: "lproj") ?? "なし")
-        if let path = bundle.path(forResource: preferredLanguage, ofType: "lproj", inDirectory: "Resources"),
-           let localizedBundle = Bundle(path: path)
-        {
-            return localizedBundle
+
+        // 🔥 `resourceURL` を使って `lproj` のフルパスを構築
+        if let resourceURL = bundle.resourceURL {
+            let lprojPath = resourceURL.appendingPathComponent("\(preferredLanguage).lproj").path
+
+            Logger.debug(message: "📂 検索パス: \(lprojPath)")
+
+            // `lproj` フォルダが存在するかチェック
+            if FileManager.default.fileExists(atPath: lprojPath),
+               let localizedBundle = Bundle(path: lprojPath)
+            {
+                return localizedBundle
+            }
         }
 
-        return bundle
+        return bundle // デフォルトの `Bundle.module` を返す
     }
 }
