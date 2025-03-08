@@ -11,6 +11,5 @@ invalid_response = "Invalid response";
 decoding_failed = "Decoding failed: %@";
 status_code = "Server error: Status code %@";
 authentication_failed = "Authentication failed";
-
 error = "ERROR"
 close = "Close"

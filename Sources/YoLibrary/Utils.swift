@@ -127,8 +127,13 @@ public class Utils {
     }
 
     /// **エラーメッセージを表示**
-    public static func showErrorAlert(on vc: UIViewController, message: String, handler: (() -> Void)? = nil) {
-        let bundle = Bundle.module // SwiftPMのリソースを取得
+    public static func showErrorAlert(
+        on vc: UIViewController,
+        message: String,
+        handler: (() -> Void)? = nil
+    ) {
+        let bundle = Bundle.module
+
         showAlert(
             on: vc,
             title: NSLocalizedString("error", bundle: bundle, comment: ""),
