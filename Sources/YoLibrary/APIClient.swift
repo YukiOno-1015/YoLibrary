@@ -11,8 +11,6 @@ public enum APIError: Error {
 
     /// エラーメッセージを多言語対応
     public var localizedDescription: String {
-        let bundle = Bundle.module // SwiftPMのリソースを取得
-
         switch self {
         case .invalidURL:
             return Utils.lstr("invalid_url")
