@@ -24,7 +24,7 @@ public extension Bundle {
 
         // 🔥 `resourceURL` を使って `lproj` のフルパスを構築
         if let resourceURL = bundle.resourceURL {
-            let lprojPath = resourceURL.appendingPathComponent("Resource/\(preferredLanguage).lproj").path
+            let lprojPath = resourceURL.appendingPathComponent("Resources/\(preferredLanguage).lproj").path
 
             Logger.debug(message: "📂 検索パス: \(lprojPath)")
 
