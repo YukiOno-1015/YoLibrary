@@ -16,10 +16,13 @@ public class Utils {
 
     /// **ローカライズされた文字列を取得**
     ///
-    /// - Parameter key: `Localizable.strings` に定義したキー
-    /// - Returns: ローカライズされた文字列
-    public static func lstr(_ key: String) -> String {
-        NSLocalizedString(key, bundle: Bundle.yoLibrary, comment: "")
+    /// - Parameters:
+    ///   - key: `Localizable.strings` に定義されたキー
+    ///   - bundle: 取得対象の `Bundle`（デフォルトは `Bundle.yoLibrary`）
+    /// - Returns: ローカライズされた文字列（存在しない場合は `key` をそのまま返す）
+    public static func localized(_ key: StaticString, bundle: Bundle = .yoLibrary) -> String {
+        let string = NSLocalizedString("\(key)", bundle: bundle, comment: "")
+        return string == "\(key)" ? "[\(key)]" : string // 未翻訳なら `"[key]"` を返す
     }
 
     // MARK: - 🎨 UI & ナビゲーション設定
@@ -136,9 +139,9 @@ public class Utils {
 
         showAlert(
             on: vc,
-            title: Utils.lstr("error"),
+            title: Utils.localized("error"),
             message: message,
-            okTitle: Utils.lstr("close"),
+            okTitle: Utils.localized("close"),
             okAction: handler
         )
     }
