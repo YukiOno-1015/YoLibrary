@@ -18,7 +18,7 @@ public extension Bundle {
 
     static var yoLibrary: Bundle {
         let bundle = Bundle.module
-        let preferredLanguage = preferredLanguageCode ?? "en"
+        let preferredLanguage = preferredLanguageCode
 
         Logger.debug(message: "🌏 現在の言語: \(preferredLanguage)")
         Logger.debug(message: bundle.path(forResource: preferredLanguage, ofType: "lproj") ?? "なし")
