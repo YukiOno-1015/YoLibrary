@@ -12,6 +12,8 @@ public extension Bundle {
         let bundle = Bundle.module
         let preferredLanguage = Locale.preferredLanguages.first ?? "en"
 
+        Logger.debug(message: "🌏 現在の言語: \(preferredLanguage)")
+
         if let path = bundle.path(forResource: preferredLanguage, ofType: "lproj"),
            let localizedBundle = Bundle(path: path)
         {
