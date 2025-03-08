@@ -17,7 +17,7 @@ public extension Bundle {
 
     /// **確実に `Localizable.strings` のバンドルを取得**
     static var yoLibrary: Bundle {
-        let bundle = Bundle.main
+        let bundle = Bundle.module
         let preferredLanguage = preferredLanguageCode
 
         Logger.debug(message: "🌏 現在の言語: \(preferredLanguage)")
