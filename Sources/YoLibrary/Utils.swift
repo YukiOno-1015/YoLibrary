@@ -2,8 +2,6 @@ import UIKit
 
 /// **汎用ユーティリティクラス**
 public class Utils {
-    private static let bundle = Bundle.module // SwiftPMのリソースを取得
-
     // MARK: - 🚀 APNs デバッグ
 
     /// **APNs ペイロードを出力（デバッグ用）**
@@ -130,6 +128,7 @@ public class Utils {
 
     /// **エラーメッセージを表示**
     public static func showErrorAlert(on vc: UIViewController, message: String, handler: (() -> Void)? = nil) {
+        let bundle = Bundle.module // SwiftPMのリソースを取得
         showAlert(
             on: vc,
             title: NSLocalizedString("error", bundle: bundle, comment: ""),
