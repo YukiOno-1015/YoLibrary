@@ -22,7 +22,7 @@ public class Utils {
     /// - Returns: ローカライズされた文字列（存在しない場合は `key` をそのまま返す）
     public static func localized(_ key: String, bundle: Bundle = .yoLibrary) -> String {
         let string = NSLocalizedString("\(key)", bundle: bundle, comment: "")
-        return string == "\(key)" ? "\(key)" : string // 未翻訳なら `"[key]"` を返す
+        return string == "\(key)" ? "[\(key)]" : string // 未翻訳なら `"[key]"` を返す
     }
 
     // MARK: - 🎨 UI & ナビゲーション設定
