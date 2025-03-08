@@ -11,5 +11,5 @@ invalid_response = "無効なレスポンスです";
 decoding_failed = "デコードに失敗しました: %@";
 status_code = "サーバーエラー: ステータスコード %@";
 authentication_failed = "認証に失敗しました";
-error = "エラー"
-close = "閉じる"
+error = "エラー";
+close = "閉じる";
