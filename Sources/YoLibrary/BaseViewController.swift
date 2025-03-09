@@ -4,13 +4,13 @@ import UIKit
 open class BaseViewController: UIViewController {
     // MARK: - Lifecycle
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         bindViewModel()
     }
 
-    override public func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNavigationBar()
     }
