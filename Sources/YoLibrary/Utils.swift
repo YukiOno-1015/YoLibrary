@@ -135,13 +135,13 @@ public class Utils {
         message: String,
         handler: (() -> Void)? = nil
     ) {
-        let bundle = Bundle.module
+        let bundle = Bundle.yoLibrary
 
         showAlert(
             on: vc,
-            title: Utils.localized("error", bundle: Bundle.yoLibrary),
+            title: Utils.localized("error", bundle: bundle),
             message: message,
-            okTitle: Utils.localized("close", bundle: Bundle.yoLibrary),
+            okTitle: Utils.localized("close", bundle: bundle),
             okAction: handler
         )
     }
