@@ -142,31 +142,49 @@ public extension UIDevice {
         UIDevice.current.userInterfaceIdiom == .pad
     }
 }
-
-// MARK: - 画面サイズ関連
-
 public extension UIDevice {
+    /// 画面の横幅を取得（iOSのバージョンに応じて適切なAPIを利用）
+    static var screenWidth: CGFloat {
+        return mainWindow?.bounds.width ?? 0
+    }
+
+    /// 画面の縦幅を取得（iOSのバージョンに応じて適切なAPIを利用）
+    static var screenHeight: CGFloat {
+        return mainWindow?.bounds.height ?? 0
+    }
+
+    /// メインウィンドウを取得（iOS 15 以降は UIWindowScene から取得）
+    private static var mainWindow: UIWindow? {
+        if #available(iOS 15.0, *) {
+            return UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }
+        }
+        return UIApplication.shared.windows.first { $0.isKeyWindow }
+    }
+
     /// 画面の横幅に対する比率でサイズを計算
     static func calcWidth(_ ratio: CGFloat) -> CGFloat {
-        UIScreen.main.bounds.width * ratio
+        screenWidth * ratio
     }
 
     /// 画面の縦幅に対する比率でサイズを計算
     static func calcHeight(_ ratio: CGFloat) -> CGFloat {
-        UIScreen.main.bounds.height * ratio
+        screenHeight * ratio
     }
 }
 
 // MARK: - UI要素の高さ取得
 
 public extension UIDevice {
-    /// ステータスバーの高さ取得（非推奨APIを回避）
+    /// ステータスバーの高さ取得（iOSのバージョンに応じて適切なAPIを利用）
     static var statusBarHeight: CGFloat {
-        UIApplication.shared.connectedScenes
-            .compactMap {
-                ($0 as? UIWindowScene)?.statusBarManager?.statusBarFrame.height
-            }
-            .first ?? 0
+        if let windowScene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene }).first {
+            return windowScene.statusBarManager?.statusBarFrame.height ?? 0
+        }
+        return UIApplication.shared.statusBarFrame.height
     }
 
     /// ナビゲーションバーの高さ取得
@@ -185,9 +203,7 @@ public extension UIDevice {
     }
 
     /// ステータスバー・ナビゲーションバー・タブバーの合計高さ取得
-    static func headerWithTabBarHeight(in vc: UIViewController)
-        -> CGFloat
-    {
+    static func headerWithTabBarHeight(in vc: UIViewController) -> CGFloat {
         headerHeight(in: vc) + tabBarHeight(in: vc)
     }
 }
