@@ -20,7 +20,7 @@ open class BaseViewController: UIViewController {
     /// **UI の共通セットアップ**
     open func setupUI() {
         Utils.setBackgroundColor(self, color: .systemBackground)
-        view.frame = UIScreen.main.bounds
+        view.frame = CGRect(x: 0, y: 0, width: Screen.width, height: Screen.height)
     }
 
     /// **ナビゲーションバーのセットアップ**
