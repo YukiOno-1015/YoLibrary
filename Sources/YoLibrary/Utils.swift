@@ -42,22 +42,35 @@ public class Utils {
         vc.view.backgroundColor = color
     }
 
-    /// **ナビゲーションバーの外観を設定**
     public static func setNavigationBarAppearance(
         _ nav: UINavigationController?,
         backgroundColor: UIColor,
         titleColor: UIColor,
+        titleFont: UIFont = UIFont.systemFont(ofSize: 17), // フォントサイズ変更を追加
         isTranslucent: Bool = false
     ) {
         guard let navBar = nav?.navigationBar else { return }
 
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = backgroundColor
-        appearance.titleTextAttributes = [.foregroundColor: titleColor]
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = backgroundColor
+            appearance.titleTextAttributes = [
+                .foregroundColor: titleColor,
+                .font: titleFont
+            ]
 
-        navBar.standardAppearance = appearance
-        navBar.scrollEdgeAppearance = appearance
+            navBar.standardAppearance = appearance
+            navBar.scrollEdgeAppearance = appearance
+        } else {
+            // iOS 12 以下の場合
+            navBar.barTintColor = backgroundColor
+            navBar.titleTextAttributes = [
+                .foregroundColor: titleColor,
+                .font: titleFont
+            ]
+        }
+
         navBar.isTranslucent = isTranslucent
     }
 
