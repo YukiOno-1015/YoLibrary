@@ -79,6 +79,8 @@ public class Utils {
     /// **ローディングを表示**
     public static func showLoading(in vc: UIViewController) {
         Logger.debug(message: "UIViewController: \(vc.title ?? "")")
+        
+        let view = vc.navigationController?.view ?? vc.view
         DispatchQueue.main.async {
             if loadingIndicator == nil {
                 Logger.debug(message: "ローディング設定開始")
@@ -91,8 +93,8 @@ public class Utils {
                 
                 // Auto Layout を設定して常に中央に配置
                 NSLayoutConstraint.activate([
-                    indicator.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
-                    indicator.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+                    indicator.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
+                    indicator.centerYAnchor.constraint(equalTo: view!.centerYAnchor)
                 ])
                 vc.view.bringSubviewToFront(indicator)
                 loadingIndicator = indicator
