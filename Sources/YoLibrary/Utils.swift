@@ -83,9 +83,17 @@ public class Utils {
             if loadingIndicator == nil {
                 Logger.debug(message: "ローディング設定開始")
                 let indicator = UIActivityIndicatorView(style: .large)
-                indicator.center = vc.view.center
+                indicator.translatesAutoresizingMaskIntoConstraints = false
+
+                indicator.color = .yellow
                 indicator.hidesWhenStopped = false
                 vc.view.addSubview(indicator)
+                
+                // Auto Layout を設定して常に中央に配置
+                NSLayoutConstraint.activate([
+                    indicator.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+                    indicator.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+                ])
                 vc.view.bringSubviewToFront(indicator)
                 loadingIndicator = indicator
                 Logger.debug(message: "ローディング設定完了")
