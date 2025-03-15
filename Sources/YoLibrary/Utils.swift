@@ -79,27 +79,34 @@ public class Utils {
     /// **ローディングを表示**
     public static func showLoading(in vc: UIViewController) {
         Logger.debug(message: "UIViewController: \(vc.title ?? "")")
-        
+
         let view = vc.navigationController?.view ?? vc.view
+
         DispatchQueue.main.async {
+            guard let targetView = view else {
+                Logger.debug(message: "ローディング表示対象のビューが見つかりません")
+                return
+            }
+
             if loadingIndicator == nil {
                 Logger.debug(message: "ローディング設定開始")
+
                 let indicator = UIActivityIndicatorView(style: .large)
                 indicator.translatesAutoresizingMaskIntoConstraints = false
-
                 indicator.color = .yellow
-                indicator.hidesWhenStopped = false
-                vc.view.addSubview(indicator)
-                
-                // Auto Layout を設定して常に中央に配置
+                indicator.hidesWhenStopped = true // 非表示時に自動で消す設定
+
+                targetView.addSubview(indicator)
+
                 NSLayoutConstraint.activate([
-                    indicator.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
-                    indicator.centerYAnchor.constraint(equalTo: view!.centerYAnchor)
+                    indicator.centerXAnchor.constraint(equalTo: targetView.centerXAnchor),
+                    indicator.centerYAnchor.constraint(equalTo: targetView.centerYAnchor)
                 ])
-                vc.view.bringSubviewToFront(indicator)
+
                 loadingIndicator = indicator
                 Logger.debug(message: "ローディング設定完了")
             }
+
             Logger.debug(message: "ローディング開始")
             loadingIndicator?.startAnimating()
         }

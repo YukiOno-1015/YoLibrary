@@ -142,15 +142,16 @@ public extension UIDevice {
         UIDevice.current.userInterfaceIdiom == .pad
     }
 }
+
 public extension UIDevice {
     /// 画面の横幅を取得（iOSのバージョンに応じて適切なAPIを利用）
     static var screenWidth: CGFloat {
-        return mainWindow?.bounds.width ?? 0
+        mainWindow?.bounds.width ?? 0
     }
 
     /// 画面の縦幅を取得（iOSのバージョンに応じて適切なAPIを利用）
     static var screenHeight: CGFloat {
-        return mainWindow?.bounds.height ?? 0
+        mainWindow?.bounds.height ?? 0
     }
 
     /// メインウィンドウを取得（iOS 15 以降は UIWindowScene から取得）
@@ -158,7 +159,7 @@ public extension UIDevice {
         if #available(iOS 15.0, *) {
             return UIApplication.shared.connectedScenes
                 .compactMap { $0 as? UIWindowScene }
-                .flatMap { $0.windows }
+                .flatMap(\.windows)
                 .first { $0.isKeyWindow }
         }
         return UIApplication.shared.windows.first { $0.isKeyWindow }
@@ -181,7 +182,8 @@ public extension UIDevice {
     /// ステータスバーの高さ取得（iOSのバージョンに応じて適切なAPIを利用）
     static var statusBarHeight: CGFloat {
         if let windowScene = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene }).first {
+            .compactMap({ $0 as? UIWindowScene }).first
+        {
             return windowScene.statusBarManager?.statusBarFrame.height ?? 0
         }
         return UIApplication.shared.statusBarFrame.height
