@@ -106,7 +106,7 @@ public class Utils {
 
                 let indicator = UIActivityIndicatorView(style: .large)
                 indicator.translatesAutoresizingMaskIntoConstraints = false
-                indicator.color = .yellow
+                indicator.color = isDarkMode(vc) ? .white : .black
                 indicator.hidesWhenStopped = true // 非表示時に自動で消す設定
 
                 targetView.addSubview(indicator)
