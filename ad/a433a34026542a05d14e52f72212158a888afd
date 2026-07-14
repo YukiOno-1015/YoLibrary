@@ -1,0 +1,21 @@
+Sources/YoLibrary/OpenAPI/MaintenanceMiddleware.swift
+  s_aa8fec75e67626::t_32e824f6e9d70d 109-112,115-117
+  s_aa8fec75e67626::t_7d9a4dafa10bcf 128
+  s_aa8fec75e67626::t_3717df2e24f0f9 1-108,113-114,118-127,129-157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "ada433a34026542a05d14e52f72212158a888afd",
+  "prompts": {},
+  "sessions": {
+    "s_aa8fec75e67626": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4c936e71-0fc9-4d2f-b7f7-f78f4f763ec0",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  }
+}
