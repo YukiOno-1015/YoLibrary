@@ -160,7 +160,17 @@ public struct RetryMiddleware: ClientMiddleware {
             do {
                 let (response, responseBody) = try await next(request, body, baseURL)
 
-                // 5xx はサーバー側の一時的な問題。やり直す価値がある。
+                // 503 はやり直さない。
+                //
+                // 5xx の中でこれだけは「意図的に閉じている」意味を持つ
+                // （メンテナンス・過負荷）。サーバーは Retry-After で
+                // 「いつ来い」と指示しているのに、その場で 3 回叩き直したら
+                // 復旧作業中のサーバーに負荷を掛けるだけになる。
+                if response.status.code == 503 {
+                    return (response, responseBody)
+                }
+
+                // 500 / 502 / 504 はサーバー側の一時的な問題。やり直す価値がある。
                 // 4xx はこちらの間違いなので、何度送っても同じ。
                 if response.status.code >= 500, attempt < maxAttempts {
                     Logger.debug(
