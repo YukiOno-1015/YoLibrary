@@ -1,0 +1,19 @@
+Sources/YoLibrary/OpenAPI/LenientDateTranscoder.swift
+  s_aa8fec75e67626::t_c36ae576e84c4f 1-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "c94f2e14b7a91280bd5ae285e4cac6c431ec2c60",
+  "prompts": {},
+  "sessions": {
+    "s_aa8fec75e67626": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4c936e71-0fc9-4d2f-b7f7-f78f4f763ec0",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  }
+}
