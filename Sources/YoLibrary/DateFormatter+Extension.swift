@@ -73,8 +73,17 @@ public extension DateFormatter {
 // MARK: - ISO8601DateFormatter 拡張
 
 public extension ISO8601DateFormatter {
+    // これらは生成後に設定を変えない（読み取り専用で使う）。
+    //
+    // Apple のフォーマッタは iOS 7 以降スレッドセーフだが、`Sendable` の
+    // 注釈が付いていないため Swift 6 では静的プロパティとして共有できない。
+    // 「作った後は変更しない」ことが担保できているので nonisolated(unsafe) で通す。
+    //
+    // formatOptions を後から書き換えると壊れる。書き換えたい場合は
+    // 新しいインスタンスを作ること。
+
     /// `yyyy-MM-dd'T'HH:mm:ssZ`
-    static let full: ISO8601DateFormatter = {
+    nonisolated(unsafe) static let full: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [
             .withFullDate, .withTime, .withTimeZone,
@@ -84,7 +93,7 @@ public extension ISO8601DateFormatter {
     }()
 
     /// `yyyy-MM-dd'T'HH:mm:ss.SSSZ`（ミリ秒対応）
-    static let fullWithMilliseconds: ISO8601DateFormatter = {
+    nonisolated(unsafe) static let fullWithMilliseconds: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [
             .withFullDate, .withTime, .withTimeZone,
@@ -95,7 +104,7 @@ public extension ISO8601DateFormatter {
     }()
 
     /// `yyyy-MM-dd`
-    static let dateOnly: ISO8601DateFormatter = {
+    nonisolated(unsafe) static let dateOnly: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withFullDate, .withDashSeparatorInDate]
         return formatter

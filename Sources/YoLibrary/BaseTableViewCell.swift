@@ -12,7 +12,11 @@ open class BaseTableViewCell: UITableViewCell {
     /// セルがインスタンス化された後のセットアップ処理
     override public func awakeFromNib() {
         super.awakeFromNib()
-        configureView()
+
+        // `awakeFromNib` は NSObject 由来で nonisolated だが、UIKit は必ず
+        // メインスレッドから呼ぶ。オーバーライドでは分離を強められないので、
+        // 実行時の事実をコンパイラに伝える。
+        MainActor.assumeIsolated { configureView() }
     }
 
     /// セルの選択状態が変更された際の処理

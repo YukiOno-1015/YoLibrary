@@ -12,7 +12,8 @@ public extension Bundle {
     /// - Returns: `"ja"`, `"en"` などの基本的な言語コード
     static var preferredLanguageCode: String {
         let locale = Locale.preferredLanguages.first ?? "en"
-        return Locale(identifier: locale).languageCode ?? "en" // `ja-JP` → `ja`
+        // `ja-JP` → `ja`。lproj のディレクトリ名は地域を含まないため落とす。
+        return Locale(identifier: locale).language.languageCode?.identifier ?? "en"
     }
 
     /// **確実に `Localizable.strings` のバンドルを取得**

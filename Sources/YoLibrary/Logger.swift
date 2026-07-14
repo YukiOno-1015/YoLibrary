@@ -15,12 +15,29 @@ public extension OSLog {
 
 // MARK: - ログカテゴリ
 
+/// ログの分類。
+///
+/// Console.app や `log stream` でカテゴリごとに絞り込める。
+/// 分けておかないと、全部のログが 1 本の流れになって追えなくなる。
 public enum LoggerCategory: String {
+    /// 画面の生成・遷移・ユーザー操作。
     case ui = "UI"
+
+    /// 自分のバックエンドとのやり取り。
     case api = "API"
+
+    /// 通信の下回り（接続状態、再試行など）。API と分けるのは、
+    /// 「サーバーが 500 を返した」と「そもそも繋がらない」を区別するため。
     case network = "NETWORK"
+
+    /// ローカル DB / キャッシュ。
     case database = "DATABASE"
+
+    /// ログイン・トークン更新・失効。
+    /// **トークンそのものは絶対にログに出さない**（漏洩経路になる）。
     case auth = "AUTH"
+
+    /// 上のどれにも当てはまらないもの。
     case other = "OTHER"
 }
 
@@ -30,10 +47,20 @@ extension OSLogType {
     /// ログレベルを文字列で取得
     var logLevelDescription: String {
         switch self {
+        // 通常運転の記録。本番でも残す。
         case .info: return "INFO"
+
+        // 開発時の詳細。本番では出力されない（OS が破棄する）。
         case .debug: return "DEBUG"
+
+        // 想定内の失敗。処理は続行できる。
         case .error: return "ERROR"
+
+        // 想定外の失敗。プログラムの前提が壊れている。
         case .fault: return "FAULT"
+
+        // OSLogType は上記以外の値も取りうる（将来 OS が追加しうる）。
+        // 網羅できないので default が要る。
         default: return "DEFAULT"
         }
     }
@@ -42,7 +69,19 @@ extension OSLogType {
 // MARK: - Logger 構造体
 
 public enum Logger {
-    public static var isLoggingEnabled: Bool = true
+    /// ログを出すかどうか。
+    ///
+    /// 可変のグローバル状態なので、ロックで守る。
+    /// `nonisolated(unsafe)` だけで通すこともできるが、それは「安全だと
+    /// 主張するだけ」で実際には競合しうる。ログはどのスレッドからも
+    /// 呼ばれるため、ここは実際に守る。
+    public static var isLoggingEnabled: Bool {
+        get { lock.withLock { enabled } }
+        set { lock.withLock { enabled = newValue } }
+    }
+
+    nonisolated(unsafe) private static var enabled = true
+    private static let lock = NSLock()
 
     public static func info(
         category: LoggerCategory = .other,

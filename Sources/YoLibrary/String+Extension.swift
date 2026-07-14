@@ -79,20 +79,14 @@ public extension String {
 public extension String {
     /// SHA256 ハッシュ
     var sha256: String {
-        if #available(iOS 13, *) {
-            return SHA256.hash(data: Data(utf8)).map { String(format: "%02x", $0) }.joined()
-        } else {
-            return hash(using: CC_SHA256, length: CC_SHA256_DIGEST_LENGTH)
-        }
+        SHA256.hash(data: Data(utf8)).map { String(format: "%02x", $0) }.joined()
     }
 
     /// MD5 ハッシュ
+    /// MD5 は衝突が現実的に作れるため、**セキュリティ用途に使ってはいけない**。
+    /// 既存データとの互換性など、ハッシュ値の一致だけが目的の場合に限る。
     var md5: String {
-        if #available(iOS 13, *) {
-            return Insecure.MD5.hash(data: Data(utf8)).map { String(format: "%02x", $0) }.joined()
-        } else {
-            return hash(using: CC_MD5, length: CC_MD5_DIGEST_LENGTH)
-        }
+        Insecure.MD5.hash(data: Data(utf8)).map { String(format: "%02x", $0) }.joined()
     }
 
     private func hash(
