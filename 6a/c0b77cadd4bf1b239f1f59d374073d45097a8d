@@ -1,0 +1,19 @@
+README.md
+  s_aa8fec75e67626::t_6ee3772142da3d 3-187
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "6ac0b77cadd4bf1b239f1f59d374073d45097a8d",
+  "prompts": {},
+  "sessions": {
+    "s_aa8fec75e67626": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4c936e71-0fc9-4d2f-b7f7-f78f4f763ec0",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  }
+}
