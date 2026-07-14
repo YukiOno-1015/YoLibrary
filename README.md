@@ -66,7 +66,7 @@ let client = Client(
 
 **swift-openapi-runtime の既定の日付変換は小数秒を受け付けない。**
 
-```
+```text
 2026-07-13T23:39:21Z        → 読める
 2026-07-13T23:39:21.402569Z → DecodingError.dataCorrupted
 ```
