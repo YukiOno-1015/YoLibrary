@@ -154,15 +154,12 @@ public extension UIDevice {
         mainWindow?.bounds.height ?? 0
     }
 
-    /// メインウィンドウを取得（iOS 15 以降は UIWindowScene から取得）
+    /// メインウィンドウを取得
     private static var mainWindow: UIWindow? {
-        if #available(iOS 15.0, *) {
-            return UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .flatMap(\.windows)
-                .first { $0.isKeyWindow }
-        }
-        return UIApplication.shared.windows.first { $0.isKeyWindow }
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap(\.windows)
+            .first { $0.isKeyWindow }
     }
 
     /// 画面の横幅に対する比率でサイズを計算
@@ -181,12 +178,11 @@ public extension UIDevice {
 public extension UIDevice {
     /// ステータスバーの高さ取得（iOSのバージョンに応じて適切なAPIを利用）
     static var statusBarHeight: CGFloat {
-        if let windowScene = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene }).first
-        {
-            return windowScene.statusBarManager?.statusBarFrame.height ?? 0
-        }
-        return UIApplication.shared.statusBarFrame.height
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?
+            .statusBarManager?
+            .statusBarFrame.height ?? 0
     }
 
     /// ナビゲーションバーの高さ取得

@@ -1,7 +1,17 @@
 import UIKit
 
 /// **汎用ユーティリティクラス**
-public class Utils {
+/// UI 操作のユーティリティ。
+///
+/// **`@MainActor` にした理由**: 中身はほぼ UIKit の操作で、メインスレッド
+/// 以外から呼ぶと未定義動作になる。以前は `DispatchQueue.main.async` を
+/// 各所に散らしていたが、それは「呼び出し側が間違えても救う」だけで、
+/// 間違いを防げない。型で縛れば、そもそも間違った場所から呼べなくなる。
+///
+/// `enum` にしているのは、インスタンス化する意味が無いため
+/// （`class` だと `Utils()` と書けてしまう）。
+@MainActor
+public enum Utils {
     // MARK: - 🚀 APNs デバッグ
 
     /// **APNs ペイロードを出力（デバッグ用）**
@@ -20,7 +30,9 @@ public class Utils {
     ///   - key: `Localizable.strings` に定義されたキー
     ///   - bundle: 取得対象の `Bundle`（デフォルトは `nil`）
     /// - Returns: ローカライズされた文字列（存在しない場合は `key` をそのまま返す）
-    public static func localized(_ key: String, bundle: Bundle? = nil) -> String {
+    /// UI 操作ではないので nonisolated。どのスレッドからでも呼べる
+    /// （エラーメッセージの組み立てなど、バックグラウンドから呼ぶ場面がある）。
+    nonisolated public static func localized(_ key: String, bundle: Bundle? = nil) -> String {
         let string = NSLocalizedString("\(key)", bundle: bundle ?? Bundle.main, comment: "")
         return string == "\(key)" ? "[\(key)]" : string // 未翻訳なら `"[key]"` を返す
     }
@@ -51,25 +63,19 @@ public class Utils {
     ) {
         guard let navBar = nav?.navigationBar else { return }
 
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = backgroundColor
-            appearance.titleTextAttributes = [
-                .foregroundColor: titleColor,
-                .font: titleFont
-            ]
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = backgroundColor
+        appearance.titleTextAttributes = [
+            .foregroundColor: titleColor,
+            .font: titleFont,
+        ]
 
-            navBar.standardAppearance = appearance
-            navBar.scrollEdgeAppearance = appearance
-        } else {
-            // iOS 12 以下の場合
-            navBar.barTintColor = backgroundColor
-            navBar.titleTextAttributes = [
-                .foregroundColor: titleColor,
-                .font: titleFont
-            ]
-        }
+        navBar.standardAppearance = appearance
+        // スクロールで隠れる状態でも同じ見た目にする。
+        // 設定しないと、スクロール先頭で背景が透明になり色が消える。
+        navBar.scrollEdgeAppearance = appearance
+        navBar.compactAppearance = appearance
 
         navBar.isTranslucent = isTranslucent
     }
@@ -87,54 +93,49 @@ public class Utils {
 
     // MARK: - ⏳ ローディング表示
 
+    /// 表示中のローディング。@MainActor なのでロック不要。
     private static var loadingIndicator: UIActivityIndicatorView?
 
     /// **ローディングを表示**
+    ///
+    /// - Parameter vc: 表示先の ViewController。
     public static func showLoading(in vc: UIViewController) {
         Logger.debug(message: "UIViewController: \(vc.title ?? "")")
 
-        let view = vc.navigationController?.view ?? vc.view
-
-        DispatchQueue.main.async {
-            guard let targetView = view else {
-                Logger.debug(message: "ローディング表示対象のビューが見つかりません")
-                return
-            }
-
-            if loadingIndicator == nil {
-                Logger.debug(message: "ローディング設定開始")
-
-                let indicator = UIActivityIndicatorView(style: .large)
-                indicator.translatesAutoresizingMaskIntoConstraints = false
-                indicator.color = isDarkMode(vc) ? .white : .black
-                indicator.hidesWhenStopped = true // 非表示時に自動で消す設定
-
-                targetView.addSubview(indicator)
-
-                NSLayoutConstraint.activate([
-                    indicator.centerXAnchor.constraint(equalTo: targetView.centerXAnchor),
-                    indicator.centerYAnchor.constraint(equalTo: targetView.centerYAnchor)
-                ])
-
-                loadingIndicator = indicator
-                Logger.debug(message: "ローディング設定完了")
-            }
-
-            Logger.debug(message: "ローディング開始")
-            loadingIndicator?.startAnimating()
+        // @MainActor なので DispatchQueue.main.async で包まない。
+        // 包むと 1 フレーム遅れ、直後に hideLoading() を呼んだときに
+        // 表示と非表示の順序が入れ替わって「消えないローディング」になる。
+        guard let targetView = vc.navigationController?.view ?? vc.view else {
+            Logger.debug(message: "ローディング表示対象のビューが見つかりません")
+            return
         }
+
+        if loadingIndicator == nil {
+            let indicator = UIActivityIndicatorView(style: .large)
+            indicator.translatesAutoresizingMaskIntoConstraints = false
+            // 明暗どちらでも見える色。自前で白黒を切り替えると、
+            // ダークモードの切り替えに追従できない。
+            indicator.color = .label
+            indicator.hidesWhenStopped = true
+
+            targetView.addSubview(indicator)
+
+            NSLayoutConstraint.activate([
+                indicator.centerXAnchor.constraint(equalTo: targetView.centerXAnchor),
+                indicator.centerYAnchor.constraint(equalTo: targetView.centerYAnchor),
+            ])
+
+            loadingIndicator = indicator
+        }
+
+        loadingIndicator?.startAnimating()
     }
 
     /// **ローディングを非表示**
     public static func hideLoading() {
-        DispatchQueue.main.async {
-            Logger.debug(message: "ローディング終了")
-            loadingIndicator?.stopAnimating()
-            Logger.debug(message: "ローディング設定リセット開始")
-            loadingIndicator?.removeFromSuperview()
-            loadingIndicator = nil
-            Logger.debug(message: "ローディング設定リセット終了")
-        }
+        loadingIndicator?.stopAnimating()
+        loadingIndicator?.removeFromSuperview()
+        loadingIndicator = nil
     }
 
     // MARK: - ⚠️ アラート & トースト表示
@@ -232,28 +233,20 @@ public class Utils {
 
     /// **RootViewController を変更（アニメーションあり）**
     public static func setRootViewController(_ viewController: UIViewController, animated: Bool = true) {
-        if #available(iOS 15.0, *) {
-            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                  let window = windowScene.windows.first
-            else {
-                print("⚠️ RootViewControllerの変更に失敗: UIWindowが見つかりません")
-                return
-            }
-
-            if animated {
-                UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                    window.rootViewController = viewController
-                }, completion: nil)
-            } else {
-                window.rootViewController = viewController
-            }
-            window.makeKeyAndVisible()
-        } else {
-            if let window = UIApplication.shared.windows.first {
-                window.rootViewController = viewController
-                window.makeKeyAndVisible()
-            }
+        guard let window = Screen.keyWindow else {
+            Logger.debug(message: "RootViewController の変更に失敗: UIWindow が見つかりません")
+            return
         }
+
+        if animated {
+            // いきなり差し替えると何が起きたか分からない。クロスフェードで繋ぐ。
+            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve) {
+                window.rootViewController = viewController
+            }
+        } else {
+            window.rootViewController = viewController
+        }
+        window.makeKeyAndVisible()
     }
 
     // MARK: - 🌐 タブバーの外観設定
@@ -294,12 +287,15 @@ public class Utils {
     // MARK: - 📸 スクリーンショット撮影
 
     /// **スクリーンショットを取得**
+    /// - Parameter view: 撮影対象。
+    /// - Returns: 撮影した画像。
     public static func captureScreenshot(of view: UIView) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, UIScreen.main.scale)
-        defer { UIGraphicsEndImageContext() }
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        view.layer.render(in: context)
-        return UIGraphicsGetImageFromCurrentImageContext()
+        // UIGraphicsBeginImageContext 系は古い API。
+        // UIGraphicsImageRenderer は解像度を自動で合わせ、色空間も正しく扱う。
+        let renderer = UIGraphicsImageRenderer(bounds: view.bounds)
+        return renderer.image { context in
+            view.layer.render(in: context.cgContext)
+        }
     }
 
     // MARK: - 🔔 Haptic フィードバック

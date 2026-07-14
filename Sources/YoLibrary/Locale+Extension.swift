@@ -34,12 +34,12 @@ public extension Locale {
 
     /// デバイスの現在の言語コード（例: `ja`, `en`, `ko`）
     static var currentLanguageCode: String {
-        Locale.current.languageCode ?? "unknown"
+        Locale.current.language.languageCode?.identifier ?? "unknown"
     }
 
     /// デバイスの現在の国コード（例: `JP`, `US`, `KR`）
     static var currentRegionCode: String {
-        Locale.current.regionCode ?? "unknown"
+        Locale.current.region?.identifier ?? "unknown"
     }
 
     /// 現在のロケールが日本語か
