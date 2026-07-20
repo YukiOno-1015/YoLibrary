@@ -1,0 +1,19 @@
+Package.swift
+  s_e748eef1ddae91::t_953a7bdc3b5c57 30-35,39,45-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "b2f2b10d37f76c13f859368a7bed64eccc2e996a",
+  "prompts": {},
+  "sessions": {
+    "s_e748eef1ddae91": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2420e444-f60d-4ab0-b1c4-aee01ea72ddd",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "YukiOno-1015 <5629245+YukiOno-1015@users.noreply.github.com>"
+    }
+  }
+}
