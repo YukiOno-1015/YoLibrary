@@ -27,18 +27,23 @@ let package = Package(
   dependencies: [
     // OpenAPI 生成コードと組み合わせるミドルウェアを提供するために要る。
     // 生成コード自体は各アプリが持つが、認証・ログ・リトライは共通化できる。
-    .package(id: "apple.swift-openapi-runtime", from: "1.12.0"),
+    //
+    // Nexus レジストリ経由（id:）での解決を試みたが、これに依存するアプリ側
+    // （MineWatch）の直接依存と「似ているが別物」判定されビルドが壊れるため
+    // 通常の SCM 参照（url:）に戻した。詳細は MineWatch 側の project.yml の
+    // コメントを参照。
+    .package(url: "https://github.com/apple/swift-openapi-runtime", from: "1.12.0"),
     // ClientMiddleware が扱う HTTPRequest / HTTPResponse の型。
     // OpenAPIRuntime の推移的依存だが、直接 import するので明示する
     // （暗黙の推移 import は将来の Swift で警告・エラーになる）。
-    .package(id: "apple.swift-http-types", from: "1.4.0"),
+    .package(url: "https://github.com/apple/swift-http-types", from: "1.4.0"),
   ],
   targets: [
     .target(
       name: "YoLibrary",
       dependencies: [
-        .product(name: "OpenAPIRuntime", package: "apple.swift-openapi-runtime"),
-        .product(name: "HTTPTypes", package: "apple.swift-http-types"),
+        .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
+        .product(name: "HTTPTypes", package: "swift-http-types"),
       ],
       resources: [.process("Resources")],
       swiftSettings: [
