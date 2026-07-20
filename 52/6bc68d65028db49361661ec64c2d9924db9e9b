@@ -1,0 +1,40 @@
+README.md
+  s_e748eef1ddae91::t_7808b597684498 10,13-15,18-21,25-29
+  s_a7b9f3d1baa232::t_990cb2b8f82c79 16-17,22-24
+.swiftpm/configuration/registries.json
+  s_a7b9f3d1baa232::t_722dad227b097b 8
+  s_e748eef1ddae91::t_02e6a1d6718c63 1-7,9-10
+Package.swift
+  s_a7b9f3d1baa232::t_990cb2b8f82c79 30-34
+  s_a7b9f3d1baa232::t_23db4e740d35e0 40-41
+  s_a7b9f3d1baa232::t_529af2a85c0b30 27-29
+  s_a7b9f3d1baa232::t_1b0072cd059def 35-39
+  s_a7b9f3d1baa232::t_a2e19c62fede9e 42-44
+  s_e748eef1ddae91::t_5a1a38f2e8a17e 6-26,45-53
+Package.resolved
+  s_e748eef1ddae91::t_fa5ce424b221cf 2,5-7,13-15,19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "526bc68d65028db49361661ec64c2d9924db9e9b",
+  "prompts": {},
+  "sessions": {
+    "s_a7b9f3d1baa232": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "9eb79fcc-aafc-4493-b147-c09db734e2a4",
+        "model": "gpt-5-mini"
+      },
+      "human_author": "YukiOno-1015 <5629245+YukiOno-1015@users.noreply.github.com>"
+    },
+    "s_e748eef1ddae91": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2420e444-f60d-4ab0-b1c4-aee01ea72ddd",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "YukiOno-1015 <5629245+YukiOno-1015@users.noreply.github.com>"
+    }
+  }
+}
