@@ -1,0 +1,21 @@
+Sources/YoLibrary/OpenAPI/Middlewares.swift
+  s_e748eef1ddae91::t_2ce0c0aa1d0c67 47-84
+Package.resolved
+  s_e748eef1ddae91::t_0ca141a4aab82e 2,4-30,35,40-48,53,58-255
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a57a747bbc9252f65f1af4a5d82a109fe0e6bf05",
+  "prompts": {},
+  "sessions": {
+    "s_e748eef1ddae91": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2420e444-f60d-4ab0-b1c4-aee01ea72ddd",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "YukiOno-1015 <5629245+YukiOno-1015@users.noreply.github.com>"
+    }
+  }
+}
