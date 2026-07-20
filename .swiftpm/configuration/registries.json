@@ -1,0 +1,10 @@
+{
+  "authentication": {},
+  "registries": {
+    "[default]": {
+      "supportsAvailability": false,
+      "url": "https://nexus-cli.sk4869.info/repository/swift-group/"
+    }
+  },
+  "version": 1
+}

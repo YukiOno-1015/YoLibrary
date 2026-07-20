@@ -7,10 +7,26 @@ Swift 6（strict concurrency）に対応済み。data race を型システムで
 ## 入れ方
 
 ```swift
-.package(url: "git@github.com:YukiOno-1015/YoLibrary.git", from: "1.2.1")
+.package(id: "YukiOno-1015.YoLibrary", from: "1.2.1")
 ```
 
-プライベートリポジトリなので SSH で参照する。CI では SSH 鍵の設定が要る。
+Nexus の Swift registry を先に向ける。`swift-group`（`swift-hosted` + `swift-proxy` を束ねた group
+リポジトリ）を指定する。ホストは `nexus-cli.sk4869.info`（`nexus.sk4869.info` は Cloudflare Zero
+Trust 認証があり CLI からは通らない）。
+
+```bash
+swift package-registry set "https://nexus-cli.sk4869.info/repository/swift-group/"
+swift package-registry login https://nexus-cli.sk4869.info/repository/swift-hosted/login \
+    --username=<NEXUS_CLI_USERNAME> \
+    --password=<NEXUS_CLI_PASSWORD>
+```
+
+CI でも SSH ではなく registry 経由で引く前提に変える。
+
+パッケージ ID (`YukiOno-1015.YoLibrary`) は Nexus の SCM→registry 自動マッピングが
+`https://github.com/YukiOno-1015/YoLibrary.git` から導出する識別子と一致させてある。
+publish 時に別の ID（例: `yukiono.yolibrary`）を使うと、`url:` 形式で参照している
+consumer 側からレジストリが自動解決できなくなる。
 
 | 項目 | 値 |
 | --- | --- |
