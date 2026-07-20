@@ -44,6 +44,44 @@ public struct AuthMiddleware: ClientMiddleware {
     }
 }
 
+// MARK: - App Check
+
+/// 全リクエストに App Check ヘッダを付ける。
+///
+/// **Authorization（誰か）とは別の関心事。** こちらは「本物のアプリからの
+/// リクエストか」を示す。トークンの取得は AuthMiddleware と同じく
+/// アプリ側の責務にする（Firebase App Check SDK の知識を持ち込まない）。
+///
+/// トークンが取れなくても **リクエストは止めない**。App Check 未対応の
+/// 環境（シミュレータ・古い OS）やトークン取得の一時的失敗で全機能が
+/// 止まるのは本末転倒。サーバー側で必須にするかどうかを判断する。
+public struct AppCheckMiddleware: ClientMiddleware {
+    private let tokenProvider: @Sendable () async -> String?
+
+    /// - Parameter tokenProvider: 現在の App Check トークンを返す処理。
+    ///   取得できないときは nil を返す（throws にしないのは、失敗を
+    ///   「リクエストを止める理由」にしないため）。
+    public init(tokenProvider: @escaping @Sendable () async -> String?) {
+        self.tokenProvider = tokenProvider
+    }
+
+    public func intercept(
+        _ request: HTTPRequest,
+        body: HTTPBody?,
+        baseURL: URL,
+        operationID: String,
+        next: (HTTPRequest, HTTPBody?, URL) async throws -> (HTTPResponse, HTTPBody?)
+    ) async throws -> (HTTPResponse, HTTPBody?) {
+        var request = request
+
+        if let token = await tokenProvider(), let field = HTTPField.Name("X-Firebase-AppCheck") {
+            request.headerFields[field] = token
+        }
+
+        return try await next(request, body, baseURL)
+    }
+}
+
 // MARK: - 相関 ID
 
 /// リクエストに `X-Request-ID` を付ける。
