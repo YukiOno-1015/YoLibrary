@@ -1,0 +1,19 @@
+README.md
+  s_4dfe6ea432fb78::t_7cf4f2534a42a1 22-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "996d83a7c7a28681a817a503ce4ed639e242c65c",
+  "prompts": {},
+  "sessions": {
+    "s_4dfe6ea432fb78": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3fc7d3e6-3f57-46d2-b1c9-18a402fafbdf",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "YukiOno-1015 <5629245+YukiOno-1015@users.noreply.github.com>"
+    }
+  }
+}
