@@ -19,10 +19,18 @@ consumer 側（MineWatch）が直接依存する `apple.swift-openapi-runtime`�
 
 代わりに GitHub → Forgejo（`git.sk4869.info`）への自動ミラー
 （`.github/workflows/mirror-to-forgejo.yml`、main + タグのみ）を用意し、
-`url:` 形式のまま HTTPS で参照する形にした。Forgejo 側リポジトリは public
-なので、consumer 側は認証情報なしで clone できる（GitHub 本体を SSH で
-参照しないのは、consumer 側の CI ノードを増やすたびに個人の SSH 鍵を配って
-回る必要が無いようにするため）。
+`url:` 形式のまま HTTPS で参照する形にした。GitHub 本体を SSH で参照しない
+のは、consumer 側の CI ノードを増やすたびに個人の SSH 鍵を配って回る必要が
+無いようにするため。
+
+Forgejo 側リポジトリは private なので、consumer 側で読み取り専用の
+Personal Access Token を `.netrc` に設定しておく必要がある。
+
+```
+machine git.sk4869.info
+login <FORGEJO_USERNAME>
+password <FORGEJO_READ_TOKEN>
+```
 
 GitHub 本体（`git@github-personal:YukiOno-1015/YoLibrary.git`）は正本のまま
 残る。開発は今までどおり GitHub 側で行い、`main`・タグへの push を契機に
