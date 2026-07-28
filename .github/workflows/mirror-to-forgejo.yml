@@ -1,0 +1,34 @@
+name: Forgejo へミラー
+
+# main への push と、リリース後に打つタグだけを Forgejo（バックアップ
+# ミラー、かつ MineWatch 側が SPM 依存として HTTPS で参照する先）へ
+# 反映する。MineWatch の mirror-to-forgejo.yml と同じ方針（GitHub が
+# コードの正本、対象は main + タグのみ。feature ブランチはノイズが多いので
+# 対象外）。
+#
+# SSH ではなく HTTPS + トークン認証。Forgejo 側の SSH をネットワーク制約
+# （ポート開放できない）で使えなかったため。
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリを取得（ミラーには全履歴が要る）
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 今 push されたブランチ/タグだけを Forgejo へミラー push
+        env:
+          FORGEJO_MIRROR_TOKEN: ${{ secrets.FORGEJO_MIRROR_TOKEN }}
+        run: |
+          git remote add forgejo "https://honoka4869:${FORGEJO_MIRROR_TOKEN}@git.sk4869.info/honoka4869/YoLibrary.git"
+          # github.ref はブランチ・タグどちらでもフルパス
+          # (refs/heads/main または refs/tags/1.3.1) がそのまま入る。
+          git push forgejo "HEAD:${{ github.ref }}"
