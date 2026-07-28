@@ -7,26 +7,26 @@ Swift 6（strict concurrency）に対応済み。data race を型システムで
 ## 入れ方
 
 ```swift
-.package(id: "YukiOno-1015.YoLibrary", from: "1.2.1")
+.package(url: "https://git.sk4869.info/honoka4869/YoLibrary.git", from: "1.3.1")
 ```
 
-Nexus の Swift registry を先に向ける。`swift-group`（`swift-hosted` + `swift-proxy` を束ねた group
-リポジトリ）を指定する。ホストは `nexus-cli.sk4869.info`（`nexus.sk4869.info` は Cloudflare Zero
-Trust 認証があり CLI からは通らない）。
+Nexus の Swift Package Registry（`.package(id:)`）経由の解決は一度試みたが、
+consumer 側（MineWatch）が直接依存する `apple.swift-openapi-runtime`（`url:`
+形式）と、このライブラリが registry 経由で引く同じパッケージ（`id:`
+形式）が SwiftPM 上「似ているが別物」と判定され、`multiple similar targets`
+でビルドが壊れる問題を解決できず断念した（XcodeGen が `.package(id:)`
+形式のリモート参照自体をサポートしていないという、より根本的な制約もある）。
 
-```bash
-swift package-registry set "https://nexus-cli.sk4869.info/repository/swift-group/"
-swift package-registry login https://nexus-cli.sk4869.info/repository/swift-hosted/login \
-    --username=<NEXUS_CLI_USERNAME> \
-    --password=<NEXUS_CLI_PASSWORD>
-```
+代わりに GitHub → Forgejo（`git.sk4869.info`）への自動ミラー
+（`.github/workflows/mirror-to-forgejo.yml`、main + タグのみ）を用意し、
+`url:` 形式のまま HTTPS で参照する形にした。Forgejo 側リポジトリは public
+なので、consumer 側は認証情報なしで clone できる（GitHub 本体を SSH で
+参照しないのは、consumer 側の CI ノードを増やすたびに個人の SSH 鍵を配って
+回る必要が無いようにするため）。
 
-CI でも SSH ではなく registry 経由で引く前提に変える。
-
-パッケージ ID (`YukiOno-1015.YoLibrary`) は Nexus の SCM→registry 自動マッピングが
-`https://github.com/YukiOno-1015/YoLibrary.git` から導出する識別子と一致させてある。
-publish 時に別の ID（例: `yukiono.yolibrary`）を使うと、`url:` 形式で参照している
-consumer 側からレジストリが自動解決できなくなる。
+GitHub 本体（`git@github-personal:YukiOno-1015/YoLibrary.git`）は正本のまま
+残る。開発は今までどおり GitHub 側で行い、`main`・タグへの push を契機に
+Forgejo へ自動反映される。
 
 | 項目 | 値 |
 | --- | --- |
