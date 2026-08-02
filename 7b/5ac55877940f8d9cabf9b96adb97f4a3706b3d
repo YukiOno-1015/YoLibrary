@@ -1,0 +1,19 @@
+.pre-commit-config.yaml
+  s_4dfe6ea432fb78::t_c7b5bd94f7449a 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "7b5ac55877940f8d9cabf9b96adb97f4a3706b3d",
+  "prompts": {},
+  "sessions": {
+    "s_4dfe6ea432fb78": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3fc7d3e6-3f57-46d2-b1c9-18a402fafbdf",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "YukiOno-1015 <5629245+YukiOno-1015@users.noreply.github.com>"
+    }
+  }
+}
