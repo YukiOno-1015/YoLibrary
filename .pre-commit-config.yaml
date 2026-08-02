@@ -1,0 +1,6 @@
+repos:
+  # ---- secret検出(全体) ----
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
