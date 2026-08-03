@@ -1,0 +1,21 @@
+.github/workflows/mirror-to-forgejo.yml
+  s_4dfe6ea432fb78::t_d3df89d2cc7782 23-25,32-35,40
+.pre-commit-config.yaml
+  s_4dfe6ea432fb78::t_ae7113df43f1a2 7-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "edb32d1ce9f8c70e21f3e3150b842e8031a71215",
+  "prompts": {},
+  "sessions": {
+    "s_4dfe6ea432fb78": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3fc7d3e6-3f57-46d2-b1c9-18a402fafbdf",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "YukiOno-1015 <5629245+YukiOno-1015@users.noreply.github.com>"
+    }
+  }
+}
