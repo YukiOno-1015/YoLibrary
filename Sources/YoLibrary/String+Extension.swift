@@ -1,4 +1,3 @@
-import CommonCrypto
 import CryptoKit
 import Foundation
 
@@ -89,16 +88,6 @@ public extension String {
         Insecure.MD5.hash(data: Data(utf8)).map { String(format: "%02x", $0) }.joined()
     }
 
-    private func hash(
-        using function: @escaping (UnsafeRawPointer?, CC_LONG, UnsafeMutablePointer<UInt8>?)
-            -> UnsafeMutablePointer<UInt8>?,
-        length: Int32
-    ) -> String {
-        guard let data = data(using: .utf8) else { return "" }
-        var hash = [UInt8](repeating: 0, count: Int(length))
-        _ = data.withUnsafeBytes { function($0.baseAddress, CC_LONG(data.count), &hash) }
-        return hash.map { String(format: "%02x", $0) }.joined()
-    }
 }
 
 // MARK: - 📦 JSON 変換

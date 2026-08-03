@@ -1,0 +1,5 @@
+# SwiftPMライブラリ(アプリではない)。公開APIはMineWatch等の利用側からしか
+# 呼ばれないため、デフォルト設定だと公開APIほぼ全てが「未使用」誤検知になる。
+# retain_public: true でpublic宣言を解析対象から除外し、パッケージ内部だけの
+# 本当の未使用コードに絞る。
+retain_public: true
