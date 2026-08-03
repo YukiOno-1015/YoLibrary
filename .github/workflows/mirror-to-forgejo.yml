@@ -20,15 +20,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: リポジトリを取得（ミラーには全履歴が要る）
-        uses: actions/checkout@v7
+        # SHA固定はRenovate等の自動更新が無いと手動追従が要る。導入予定
+        # (フェーズ3)まではメジャータグ追従を優先する意図的な判断。
+        uses: actions/checkout@v7 # nosemgrep: yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag
         with:
           fetch-depth: 0
 
       - name: 今 push されたブランチ/タグだけを Forgejo へミラー push
         env:
           FORGEJO_MIRROR_TOKEN: ${{ secrets.FORGEJO_MIRROR_TOKEN }}
+          # ${{ github.ref }} を run: に直接埋め込まず環境変数経由にする
+          # （github コンテキストの値は信頼できない入力として扱う。Semgrep
+          # run-shell-injection 対策）。
+          GIT_REF: ${{ github.ref }}
         run: |
           git remote add forgejo "https://honoka4869:${FORGEJO_MIRROR_TOKEN}@git.sk4869.info/honoka4869/YoLibrary.git"
           # github.ref はブランチ・タグどちらでもフルパス
           # (refs/heads/main または refs/tags/1.3.1) がそのまま入る。
-          git push forgejo "HEAD:${{ github.ref }}"
+          git push forgejo "HEAD:${GIT_REF}"
